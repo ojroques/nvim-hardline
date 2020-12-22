@@ -24,14 +24,16 @@ M.events = {
 }
 
 M.sections = {
-  require('hardline.mode'), ' ',
-  require('hardline.git'), ' ',
-  require('hardline.file'), ' ',
+  {class = 'A', item = require('hardline.mode').get_item()}, ' ',
+  {class = 'B', item = require('hardline.git').get_item()}, ' ',
+  {class = 'C', item = require('hardline.filename').get_item()}, ' ',
   '%=',
-  -- require('hardline.lsp'),
-  -- require('hardline.whitespace'),
-  require('hardline.filetype'), ' ',
-  require('hardline.line'),
+  -- {class = 'error', item = require('hardline.lsp').get_error()}, ' ',
+  -- {class = 'warning', item = require('hardline.lsp').get_warning()}, ' ',
+  -- {class = 'warning', item = require('hardline.whitespace').get_item()}, ' ',
+  -- {class = 'X', item = require('hardline.wordcount').get_item()}, ' ',
+  {class = 'Y', item = require('hardline.filetype').get_item()}, ' ',
+  {class = 'Z', item = require('hardline.line').get_item()},
 }
 
 -------------------- HELPERS -------------------------------
@@ -48,9 +50,9 @@ local function load_section(section)
   elseif type(section) == 'string' then
     return section
   elseif type(section) == 'table' then
-    return load_section(section.get_component)
+    return load_section(section.item)
   end
-  echo('WarningMsg', 'Section must be a function or a string!')
+  echo('WarningMsg', 'Invalid section.')
   return ''
 end
 

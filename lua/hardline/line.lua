@@ -13,7 +13,7 @@ function M.get_percent()
   return '%03p%%'
 end
 
-function M.get_component()
+function M.get_item()
   return table.concat({
     [[%{luaeval('require("hardline.line").get_line()')}]], ':',
     [[%{luaeval('require("hardline.line").get_column()')}]], ' ',

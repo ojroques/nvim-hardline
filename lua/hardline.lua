@@ -1,0 +1,3 @@
+-- nvim-hardline
+-- By Olivier Roques
+-- github.com/ojroques

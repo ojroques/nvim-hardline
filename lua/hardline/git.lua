@@ -15,7 +15,10 @@ function M.get_hunks()
 end
 
 function M.get_branch()
-  return ''
+  if not g.loaded_gitgutter then
+    return ''
+  end
+  return string.format('  %s', fn.FugitiveHead())
 end
 
 function M.get_component()

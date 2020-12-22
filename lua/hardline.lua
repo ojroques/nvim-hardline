@@ -27,6 +27,11 @@ M.sections = {
   require('hardline.mode'), ' ',
   require('hardline.git'), ' ',
   require('hardline.file'), ' ',
+  '%=',
+  -- require('hardline.lsp'),
+  -- require('hardline.whitespace'),
+  require('hardline.filetype'), ' ',
+  require('hardline.line'),
 }
 
 -------------------- HELPERS -------------------------------

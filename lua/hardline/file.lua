@@ -11,6 +11,7 @@ end
 
 function M.get_component()
   return table.concat({
+    [[%<]],
     [[%{luaeval('require("hardline.file").get_name()')}]],
     M.get_mode(),
   })

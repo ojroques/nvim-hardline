@@ -22,24 +22,20 @@ function M.get_mode()
 end
 
 function M.get_paste()
-  if not o.paste then
-    return ''
-  end
-  return 'PASTE'
+  if not o.paste then return '' end
+  return '  PASTE'
 end
 
 function M.get_spell()
-  if not wo.spell then
-    return ''
-  end
-  return string.format('SPELL [%s]', string.upper(bo.spelllang))
+  if not wo.spell then return '' end
+  return string.format('  SPELL [%s]', string.upper(bo.spelllang))
 end
 
 function M.get_item()
   return table.concat({
-    [[%{luaeval('require("hardline.mode").get_mode()')}]], ' ',
-    [[%{luaeval('require("hardline.mode").get_paste()')}]], ' ',
-    [[%{luaeval('require("hardline.mode").get_spell()')}]], ' '
+    [[%{luaeval('require("hardline.mode").get_mode()')}]],
+    [[%{luaeval('require("hardline.mode").get_paste()')}]],
+    [[%{luaeval('require("hardline.mode").get_spell()')}]],
   })
 end
 

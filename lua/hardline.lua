@@ -7,8 +7,9 @@ local cmd, vim = vim.cmd, vim
 local wo = vim.wo
 local M = {}
 
+-------------------- OPTIONS -------------------------------
 M.events = {
-  reload = {
+  active = {
     'BufEnter',
     'BufReadPost',
     'BufWinEnter',
@@ -18,7 +19,7 @@ M.events = {
     'VimResized',
     'WinEnter',
   },
-  unload = {
+  inactive = {
     'WinLeave',
   },
 }
@@ -36,6 +37,15 @@ M.sections = {
   {class = 'Z', item = require('hardline.line').get_item()},
 }
 
+M.colors = {
+  active = {
+    A = {ctermfg='170',guifg='#C678DD'},
+  },
+  inactive = {
+    A = {ctermfg='170',guifg='#C678DD'},
+  },
+}
+
 -------------------- HELPERS -------------------------------
 local function echo(hlgroup, msg)
   cmd(string.format('echohl %s', hlgroup))
@@ -43,38 +53,62 @@ local function echo(hlgroup, msg)
   cmd('echohl None')
 end
 
-local function load_section(section)
-  if not section then return end
+-------------------- STATUSLINE ----------------------------
+local function color_item(item, class, active)
+  local mode = active and 'Active' or 'Inactive'
+  if not M.colors[string.lower(mode)][class] then return item end
+  return string.format('%%#Hardline%s%s#%s%%##', mode, class, item)
+end
+
+local function reload_section(section, active)
   if type(section) == 'function' then
     return section()
   elseif type(section) == 'string' then
     return section
   elseif type(section) == 'table' then
-    return load_section(section.item)
+    return color_item(section.item, section.class, active)
   end
   echo('WarningMsg', 'Invalid section.')
   return ''
 end
 
--------------------- INTERFACE -----------------------------
-function M.unload()
-  wo.statusline = table.concat(vim.tbl_map(load_section, M.sections))
+function M.reload(active)
+  local items = {}
+  for _, section in ipairs(M.sections) do
+    table.insert(items, reload_section(section, active))
+  end
+  wo.statusline = table.concat(items)
 end
 
-function M.reload()
-  wo.statusline = table.concat(vim.tbl_map(load_section, M.sections))
+-------------------- SETUP -----------------------------
+local function set_hlgroups()
+  for _, mode in ipairs({'Active', 'Inactive'}) do
+    local m = string.lower(mode)
+    for class, args in pairs(M.colors[m]) do
+      local a = {}
+      for k, v in pairs(args) do
+        table.insert(a, string.format('%s=%s', k, v))
+      end
+      cmd(string.format('hi Hardline%s%s %s', mode, class, table.concat(a, ' ')))
+    end
+  end
 end
 
-function M.autocommands()
+local function set_autocmds()
   cmd 'augroup hardline'
   cmd 'autocmd!'
-  for _, event in ipairs(M.events.reload) do
-    cmd(string.format('autocmd %s * lua require("hardline").reload()', event))
-  end
-  for _, event in ipairs(M.events.unload) do
-    cmd(string.format('autocmd %s * lua require("hardline").unload()', event))
+  for mode, events in pairs(M.events) do
+    for _, event in ipairs(events) do
+      local raw_str = 'autocmd %s * lua require("hardline").reload(%s)'
+      cmd(string.format(raw_str, event, mode == 'active'))
+    end
   end
   cmd 'augroup END'
+end
+
+function M.setup(user_opts)
+  set_hlgroups()
+  set_autocmds()
 end
 
 ------------------------------------------------------------

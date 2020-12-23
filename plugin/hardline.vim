@@ -6,6 +6,6 @@ if exists('g:loaded_hardline')
   finish
 endif
 
-lua require('hardline').autocommands()
+lua require('hardline').setup()
 
 let g:loaded_hardline = 1

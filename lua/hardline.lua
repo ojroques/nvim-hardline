@@ -9,117 +9,92 @@ local common = require('hardline.common')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
-M.theme = 'default'
-M.events = {
-  active = {
-    'BufEnter',
-    'BufReadPost',
-    'BufWinEnter',
-    'BufWritePost',
-    'FileChangedShellPost',
-    'FileType',
-    'VimResized',
-    'WinEnter',
+M.options = {
+  theme = 'default',
+  events = {
+    active = {
+      'WinEnter',
+    },
+    inactive = {
+      'WinLeave',
+    },
   },
-  inactive = {
-    'WinLeave',
-  },
-}
-M.sections = {
-  {
-    class = nil,
-    item = require('hardline.parts.mode').get_item()
-  }, ' ',
-  {
-    class = 'B',
-    item = require('hardline.parts.git').get_item()
-  }, ' ',
-  {
-    class = 'C',
-    item = require('hardline.parts.filename').get_item()
-  }, ' ',
-  '%=',
-  -- {
-  --   class = 'Error',
-  --   item = require('hardline.parts.lsp').get_errors()
-  -- }, ' ',
-  -- {
-  --   class = 'Warning',
-  --   item = require('hardline.parts.lsp').get_warnings()
-  -- }, ' ',
-  -- {
-  --   class = 'Warning',
-  --   item = require('hardline.parts.whitespace').get_item()
-  -- }, ' ',
-  -- {
-  --   class = 'X',
-  --   item = require('hardline.parts.wordcount').get_item()
-  -- }, ' ',
-  {
-    class = 'Y',
-    item = require('hardline.parts.filetype').get_item()
-  }, ' ',
-  {
-    class = 'A',
-    item = require('hardline.parts.line').get_item()
+  sections = {
+    -- {class = 'mode', item = require('hardline.parts.mode').item}, ' ',
+    -- {class = 'high', item = require('hardline.parts.git').item}, ' ',
+    {class = 'med', item = require('hardline.parts.filename').item}, ' ',
+    '%=',
+    -- {class = 'high', item = require('hardline.parts.filetype').item}, ' ',
+    -- {class = 'mode', item = require('hardline.parts.line').item},
   },
 }
 
 -------------------- STATUSLINE ----------------------------
 local function color_item(item, class)
-  local mode = common.is_active() and 'active' or 'inactive'
-  if not class or not common.theme.colors[class] then return item end
-  return string.format('%%#Hardline%s%s#%s%%##', class, mode, item)
+  if not class then return item end
+  if not M.options.theme[class] then return item end
+  return string.format('%%#Hardline_%s_%s#%s%%*', class, 'active', item)
 end
 
-local function reload_section(section)
+local function update_section(section)
   if type(section) == 'function' then
     return section()
   elseif type(section) == 'string' then
     return section
   elseif type(section) == 'table' then
-    return color_item(reload_section(section.item), section.class)
+    return color_item(update_section(section.item), section.class)
   end
   common.echo('WarningMsg', 'Invalid section.')
   return ''
 end
 
-function M.reload(active)
-  common.set_active(active)
-  wo.statusline = table.concat(vim.tbl_map(reload_section, M.sections))
+function M.update()
+  return table.concat(vim.tbl_map(update_section, M.options.sections))
 end
 
 -------------------- SETUP -----------------------------
-
-local function set_hlgroups()
-  for class, attr in pairs(common.theme.colors) do
-    for mode, args in pairs(attr) do
-      local a = common.build_args(args)
-      cmd(string.format('hi Hardline%s%s %s', class, mode, a))
-    end
-  end
-  for mode, args in pairs(common.theme.mode_colors) do
-    local a = common.build_args(args)
-    cmd(string.format('hi HardlineMode%s %s', mode, a))
-  end
-end
-
 local function set_autocmds()
   cmd 'augroup hardline'
   cmd 'autocmd!'
-  for mode, events in pairs(M.events) do
+  for mode, events in pairs(M.options.events) do
     for _, event in ipairs(events) do
-      local raw_str = 'autocmd %s * lua require("hardline").reload(%s)'
-      cmd(string.format(raw_str, event, mode == 'active'))
+      local raw_str = 'autocmd %s * lua require("hardline").set_statusline()'
+      cmd(string.format(raw_str, event))
     end
   end
   cmd 'augroup END'
 end
 
-function M.setup(user_opts)
-  common.theme = require(string.format('hardline.themes.%s', M.theme))
+local function set_hlgroups()
+  for class, attr in pairs(M.options.theme) do
+    for mode, args in pairs(attr) do
+      local a = {}
+      for k, v in pairs(args) do
+        table.insert(a, string.format('%s=%s', k, v))
+      end
+      a = table.concat(a, ' ')
+      cmd(string.format('hi Hardline_%s_%s %s', class, mode, a))
+    end
+  end
+end
+
+local function set_theme()
+  if type(M.options.theme) == 'string' then
+    local theme = require(string.format('hardline.themes.%s', M.options.theme))
+    M.options.theme = theme
+  end
+end
+
+function M.set_statusline()
+  wo.statusline = [[%!luaeval('require("hardline").update()')]]
+end
+
+function M.setup(user_options)
+  M.options = vim.tbl_extend('force', M.options, user_options)
+  set_theme()
   set_hlgroups()
   set_autocmds()
+  M.set_statusline()
 end
 
 ------------------------------------------------------------

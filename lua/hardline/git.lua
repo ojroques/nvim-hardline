@@ -18,12 +18,12 @@ function M.get_branch()
   if not g.loaded_gitgutter then
     return ''
   end
-  return string.format('%s', fn.FugitiveHead())
+  return string.format(' %s', fn.FugitiveHead())
 end
 
 function M.get_item()
   return table.concat({
-    [[%{luaeval('require("hardline.git").get_hunks()')}]], ' ',
+    [[%{luaeval('require("hardline.git").get_hunks()')}]],
     [[%{luaeval('require("hardline.git").get_branch()')}]],
   })
 end

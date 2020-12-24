@@ -14,7 +14,7 @@ local function get_line()
 end
 
 local function get_column()
-  local nb_columns = vim.fn.col('$')
+  local nb_columns = vim.fn.col('$') - 1
   local column = vim.fn.col('.')
   local max_dots = get_dots(nb_columns, 999)
   local dots = get_dots(column, 999)

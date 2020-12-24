@@ -16,6 +16,8 @@ M.options = {
     {class = 'high', item = require('hardline.parts.git').get_item},
     {class = 'med', item = require('hardline.parts.filename').get_item},
     {class = 'med', item ='%='},
+    {class = 'warning', item = require('hardline.parts.lsp').get_warning},
+    {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'high', item = require('hardline.parts.filetype').get_item},
     {class = 'mode', item = require('hardline.parts.line').get_item},
   },

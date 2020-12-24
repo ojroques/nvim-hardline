@@ -1,5 +1,9 @@
 local common = require('hardline.common')
 
+local function get_mode()
+  return common.modes[vim.fn.mode()].text
+end
+
 local function get_paste()
   if not vim.o.paste then return '' end
   return '|PASTE'
@@ -11,17 +15,7 @@ local function get_spell()
 end
 
 local function get_item()
-  local mode = common.get_mode()
-  return {
-    text = table.concat({
-      ' ',
-      string.format('%s', mode.text),
-      get_paste(),
-      get_spell(),
-      ' '
-    }),
-    mode = mode.color,
-  }
+  return table.concat({' ', get_mode(), get_paste(), get_spell(), ' ' })
 end
 
 return {

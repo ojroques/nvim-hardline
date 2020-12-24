@@ -1,13 +1,16 @@
-local M = {}
+local common = require('hardline.common')
 
-function M.get_filetype()
-  return vim.bo.filetype
+local function get_filetype()
+  return string.format(' %s ', vim.bo.filetype)
 end
 
-function M.get_item()
-  return table.concat({
-    [[%{luaeval('require("hardline.parts.filetype").get_filetype()')}]],
-  })
+local function get_item()
+  return {
+    text = get_filetype(),
+    mode = common.get_active(),
+  }
 end
 
-return M
+return {
+  get_item = get_item,
+}

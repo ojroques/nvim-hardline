@@ -3,14 +3,14 @@
 -- github.com/ojroques
 
 -------------------- VARIABLES -----------------------------
-local api, cmd, vim = vim.api, vim.cmd, vim
+local api, cmd, fn, vim = vim.api, vim.cmd, vim.fn, vim
 local wo = vim.wo
 local common = require('hardline.common')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
 M.options = {
-  theme = 'default',
+  theme = 'one',
   events = {
     active = {
       'WinEnter',
@@ -20,20 +20,21 @@ M.options = {
     },
   },
   sections = {
-    -- {class = 'mode', item = require('hardline.parts.mode').item}, ' ',
-    -- {class = 'high', item = require('hardline.parts.git').item}, ' ',
-    {class = 'med', item = require('hardline.parts.filename').item}, ' ',
+    {class = 'mode', item = require('hardline.parts.mode').get_item},
+    {class = 'high', item = require('hardline.parts.git').get_item},
+    {class = 'med', item = require('hardline.parts.filename').get_item},
     '%=',
-    -- {class = 'high', item = require('hardline.parts.filetype').item}, ' ',
-    -- {class = 'mode', item = require('hardline.parts.line').item},
+    {class = 'high', item = require('hardline.parts.filetype').get_item},
+    {class = 'mode', item = require('hardline.parts.line').get_item},
   },
 }
 
 -------------------- STATUSLINE ----------------------------
-local function color_item(item, class)
-  if not class then return item end
-  if not M.options.theme[class] then return item end
-  return string.format('%%#Hardline_%s_%s#%s%%*', class, 'active', item)
+local function color_item(class, mode, item)
+  if not class or not mode then return item end
+  local hlgroup = string.format('Hardline_%s_%s', class, mode)
+  if fn.hlexists(hlgroup) == 0 then return item end
+  return string.format('%%#%s#%s%%*', hlgroup, item)
 end
 
 local function update_section(section)
@@ -41,8 +42,9 @@ local function update_section(section)
     return section()
   elseif type(section) == 'string' then
     return section
-  elseif type(section) == 'table' then
-    return color_item(update_section(section.item), section.class)
+  elseif type(section) == 'table' and type(section.item) == 'function' then
+    local item = section.item()
+    return color_item(section.class, item.mode, item.text)
   end
   common.echo('WarningMsg', 'Invalid section.')
   return ''
@@ -86,6 +88,7 @@ local function set_theme()
 end
 
 function M.set_statusline()
+  common.set_active('active')
   wo.statusline = [[%!luaeval('require("hardline").update()')]]
 end
 

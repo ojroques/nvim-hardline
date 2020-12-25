@@ -10,7 +10,7 @@ local M = {}
 
 -------------------- OPTIONS -------------------------------
 M.options = {
-  theme = 'one',
+  theme = 'default',
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item},
@@ -36,7 +36,7 @@ local function get_state(class)
 end
 
 local function color_item(class, item)
-  if not class then return item end
+  if not class or class == 'none' then return item end
   local state = get_state(class)
   local hlgroup = string.format('Hardline_%s_%s', class, state)
   if fn.hlexists(hlgroup) == 0 then return item end

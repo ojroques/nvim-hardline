@@ -6,5 +6,5 @@ local function get_item()
 end
 
 return {
-  get_item = get_item(),
+  get_item = get_item,
 }

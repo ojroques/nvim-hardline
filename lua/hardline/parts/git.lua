@@ -17,7 +17,8 @@ local function get_branch()
 end
 
 local function get_item()
-  return table.concat({' ', get_hunks(), get_branch(), ' '})
+  local item = table.concat({' ', get_hunks(), get_branch(), ' '})
+  return item == '  ' and '' or item
 end
 
 return {

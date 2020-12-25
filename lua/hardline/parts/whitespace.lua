@@ -1,6 +1,7 @@
 local cmd, fn, vim = vim.cmd, vim.fn, vim
-local bo = vim.bo
+local b, bo = vim.b, vim.bo
 local enabled = false
+local cache = ''
 local options = {
   c_langs = {'arduino', 'c', 'cpp', 'cuda', 'go', 'javascript', 'ld', 'php'},
   max_lines = 5000,
@@ -49,13 +50,14 @@ local function get_item()
   if not enabled then
     cmd 'augroup hardline_whitespace'
     cmd 'autocmd!'
-    cmd 'autocmd CursorHold, BufWritePost * unlet! b:hardline_whitespace'
+    cmd 'autocmd CursorHold,BufWritePost * unlet! b:hardline_whitespace'
     cmd 'augroup end'
     enabled = true
   end
   if bo.readonly or not bo.modifiable then return '' end
   if fn.line('$') > options.max_lines then return '' end
-  if fn.exists('b:hardline_whitespace') ~= 0 then return '' end
+  if fn.exists('b:hardline_whitespace') ~= 0 then return cache end
+  b.hardline_whitespace = 1
   local item = table.concat({
     ' ',
     check_trailing(),
@@ -64,7 +66,8 @@ local function get_item()
     check_conflict(),
     ' ',
   })
-  return item == '  ' and '' or item
+  cache = item == '  ' and '' or item
+  return cache
 end
 
 return {

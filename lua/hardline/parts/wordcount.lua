@@ -1,5 +1,7 @@
 local cmd, fn, vim = vim.cmd, vim.fn, vim
 local b, bo = vim.b, vim.bo
+local common = require('hardline.common')
+
 local enabled = false
 local cache = ''
 local options = {
@@ -19,7 +21,8 @@ local options = {
 }
 
 local function in_visual()
-  return vim.tbl_contains({'v', 'V', '', 's', 'S', ''}, fn.mode())
+  local mode = common.modes[fn.mode()] or common.modes['?']
+  return mode.state == 'visual'
 end
 
 local function get_wordcount()
@@ -33,17 +36,14 @@ local function get_item()
     cmd 'augroup hardline_wordcount'
     cmd 'autocmd!'
     cmd 'autocmd CursorHold,BufWritePost * unlet! b:hardline_wordcount'
-    cmd 'augroup end'
+    cmd 'augroup END'
     enabled = true
   end
   if not vim.tbl_contains(options.filetypes, bo.filetype) then return '' end
   if fn.line('$') > options.max_lines then return '' end
-  if fn.exists('b:hardline_wordcount') ~= 0 and not in_visual() then
-    return cache
-  end
-  b.hardline_wordcount = 1
-  local item = table.concat({' ', get_wordcount(), ' '})
-  cache = item == '  ' and '' or item
+  if b.hardline_wordcount and not in_visual() then return cache end
+  b.hardline_wordcount = true
+  cache = get_wordcount()
   return cache
 end
 

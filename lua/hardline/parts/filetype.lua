@@ -1,11 +1,7 @@
 local bo = vim.bo
 
-local function get_filetype()
-  return string.format('%s', bo.filetype)
-end
-
 local function get_item()
-  return table.concat({' ', get_filetype(), ' '})
+  return bo.filetype
 end
 
 return {

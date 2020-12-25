@@ -1,5 +1,7 @@
+local bo = vim.bo
+
 local function get_filetype()
-  return string.format('%s', vim.bo.filetype)
+  return string.format('%s', bo.filetype)
 end
 
 local function get_item()

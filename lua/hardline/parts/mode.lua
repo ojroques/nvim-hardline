@@ -1,17 +1,19 @@
+local fn = vim.fn
+local o, bo, wo = vim.o, vim.bo, vim.wo
 local common = require('hardline.common')
 
 local function get_mode()
-  return common.modes[vim.fn.mode()].text
+  return common.modes[fn.mode()].text
 end
 
 local function get_paste()
-  if not vim.o.paste then return '' end
+  if not o.paste then return '' end
   return '|PASTE'
 end
 
 local function get_spell()
-  if not vim.wo.spell then return '' end
-  return string.format('|SPELL[%s]', string.upper(vim.bo.spelllang))
+  if not wo.spell then return '' end
+  return string.format('|SPELL[%s]', string.upper(bo.spelllang))
 end
 
 local function get_item()

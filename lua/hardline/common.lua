@@ -1,3 +1,5 @@
+local cmd, fn, vim = vim.cmd, vim.fn, vim
+local g = vim.g
 local M = {
   modes = {
     ['?'] = {text = '???', color = 'inactive'},
@@ -16,13 +18,13 @@ local M = {
 }
 
 function M.echo(hlgroup, msg)
-  vim.cmd(string.format('echohl %s', hlgroup))
-  vim.cmd(string.format('echo "[hardline] %s"', msg))
-  vim.cmd('echohl None')
+  cmd(string.format('echohl %s', hlgroup))
+  cmd(string.format('echo "[hardline] %s"', msg))
+  cmd('echohl None')
 end
 
 function M.is_active()
-  return vim.g.statusline_winid == vim.fn.win_getid()
+  return g.statusline_winid == fn.win_getid()
 end
 
 return M

@@ -3,8 +3,8 @@
 -- github.com/ojroques
 
 -------------------- VARIABLES -----------------------------
-local cmd, fn, vim = vim.cmd, vim.fn, vim
-local o, wo = vim.wo, vim.o
+local api, cmd, fn, vim = vim.api, vim.cmd, vim.fn, vim
+local g, o, wo = vim.g, vim.o, vim.wo
 local common = require('hardline.common')
 local M = {}
 
@@ -35,28 +35,35 @@ local function get_state(class)
   return common.is_active() and 'active' or 'inactive'
 end
 
-local function color_item(class, item)
-  if not class or class == 'none' then return item end
-  local state = get_state(class)
-  local hlgroup = string.format('Hardline_%s_%s', class, state)
-  if fn.hlexists(hlgroup) == 0 then return item end
-  return string.format('%%#%s#%s%%*', hlgroup, item)
+local function color_section(section)
+  if not section.class or section.class == 'none' then return section.item end
+  local state = get_state(section.class)
+  local hlgroup = string.format('Hardline_%s_%s', section.class, state)
+  if fn.hlexists(hlgroup) == 0 then return section.item end
+  return string.format('%%#%s#%s%%*', hlgroup, section.item)
 end
 
 local function update_section(section)
-  if type(section) == 'function' then
-    return section()
-  elseif type(section) == 'string' then
+  if type(section) == 'string' then
     return section
+  elseif type(section) == 'function' then
+    return section()
   elseif type(section) == 'table' then
-    return color_item(section.class, update_section(section.item))
+    return {class = section.class, item = update_section(section.item)}
   end
   common.echo('WarningMsg', 'Invalid section.')
   return ''
 end
 
 function M.update()
-  return table.concat(vim.tbl_map(update_section, M.options.sections))
+  local cache
+  if common.is_active() then
+    cache = vim.tbl_map(update_section, M.options.sections)
+    api.nvim_win_set_var(g.statusline_winid, 'hardline_cache', cache)
+  else
+    cache = api.nvim_win_get_var(g.statusline_winid, 'hardline_cache')
+  end
+  return table.concat(vim.tbl_map(color_section, cache))
 end
 
 -------------------- SETUP -----------------------------

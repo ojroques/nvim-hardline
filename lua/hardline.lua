@@ -17,7 +17,7 @@ M.options = {
     {class = 'high', item = require('hardline.parts.git').get_item},
     {class = 'med', item = require('hardline.parts.filename').get_item},
     '%=',
-    {class = 'med', item = require('hardline.parts.wordcount').get_item},
+    {class = 'low', item = require('hardline.parts.wordcount').get_item},
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},

@@ -47,14 +47,19 @@ return {
     },
   },
   low = {
-    active = inactive,
-    inactive = inactive,
-  },
-  med = {
     active = {
       guifg = colors.white.gui,
       guibg = colors.cursor_grey.gui,
       ctermfg = colors.white.cterm,
+      ctermbg = colors.cursor_grey.cterm,
+    },
+    inactive = inactive,
+  },
+  med = {
+    active = {
+      guifg = colors.yellow.gui,
+      guibg = colors.cursor_grey.gui,
+      ctermfg = colors.yellow.cterm,
       ctermbg = colors.cursor_grey.cterm,
     },
     inactive = inactive,

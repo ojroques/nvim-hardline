@@ -1,5 +1,6 @@
 local cmd, fn, vim = vim.cmd, vim.fn, vim
 local b, bo = vim.b, vim.bo
+
 local enabled = false
 local cache = ''
 local options = {
@@ -18,14 +19,14 @@ local function check_trailing()
   return search('trailing', [[\s$]])
 end
 
-local function check_mixed_indent()
+local function check_mix_indent()
   local tst = [[(^\t* +\t\s*\S)]]
   local tls = string.format([[(^\t+ {%d,}\S)]], bo.tabstop)
   local pattern = string.format([[\v%s|%s]], tst, tls)
   return search('mix-indent', pattern)
 end
 
-local function check_mixed_indent_file()
+local function check_mix_indent_file()
   local head_spc = [[\v(^ +)]]
   if vim.tbl_contains(options.c_langs, bo.filetype) then
     head_spc = [[\v(^ +\*@!)]]
@@ -51,22 +52,19 @@ local function get_item()
     cmd 'augroup hardline_whitespace'
     cmd 'autocmd!'
     cmd 'autocmd CursorHold,BufWritePost * unlet! b:hardline_whitespace'
-    cmd 'augroup end'
+    cmd 'augroup END'
     enabled = true
   end
   if bo.readonly or not bo.modifiable then return '' end
   if fn.line('$') > options.max_lines then return '' end
-  if fn.exists('b:hardline_whitespace') ~= 0 then return cache end
-  b.hardline_whitespace = 1
-  local item = table.concat({
-    ' ',
+  if b.hardline_whitespace then return cache end
+  b.hardline_whitespace = true
+  cache = table.concat({
     check_trailing(),
-    check_mixed_indent(),
-    check_mixed_indent_file(),
+    check_mix_indent(),
+    check_mix_indent_file(),
     check_conflict(),
-    ' ',
   })
-  cache = item == '  ' and '' or item
   return cache
 end
 

@@ -27,45 +27,76 @@ M.options = {
 }
 
 -------------------- STATUSLINE ----------------------------
-local function get_state(class)
-  if class == 'mode' and common.is_active() then
-    local mode = common.modes[vim.fn.mode()]
-    if not mode then return common.modes['?'].color end
-    return mode.color
+local function color_sections(sections)
+  local function map(section)
+    if type(section) ~= 'table' then return section end
+    if section.class == 'none' then return section.item end
+    local state = common.get_state(section.class)
+    local hlgroup = string.format('Hardline_%s_%s', section.class, state)
+    if fn.hlexists(hlgroup) == 0 then return section.item end
+    return string.format('%%#%s#%s%%*', hlgroup, section.item)
   end
-  return common.is_active() and 'active' or 'inactive'
+  return vim.tbl_map(map, sections)
 end
 
-local function color_section(section)
-  if type(section) ~= 'table' then return section end
-  if not section.class or section.class == 'none' then return section.item end
-  local state = get_state(section.class)
-  local hlgroup = string.format('Hardline_%s_%s', section.class, state)
-  if fn.hlexists(hlgroup) == 0 then return section.item end
-  return string.format('%%#%s#%s%%*', hlgroup, section.item)
+local function aggregate_sections(sections)
+  local aggregated, piv = {}, 1
+  while piv <= #sections do
+    if type(sections[piv]) == 'table' then
+      local items = {}
+      for j = piv, #sections + 1 do
+        if j == #sections + 1 or sections[j].class ~= sections[piv].class then
+          table.insert(aggregated, {
+            class = sections[piv].class,
+            item = string.format(' %s ', table.concat(items, ' '))
+          })
+          piv = j
+          break
+        end
+        table.insert(items, sections[j].item)
+      end
+    else
+      table.insert(aggregated, sections[piv])
+      piv = piv + 1
+    end
+  end
+  return aggregated
 end
 
-local function update_section(section)
-  if type(section) == 'string' then
-    return section
-  elseif type(section) == 'function' then
-    return section()
-  elseif type(section) == 'table' then
-    return {class = section.class, item = update_section(section.item)}
+local function remove_empty_sections(sections)
+  local function filter(section)
+    if type(section) == 'table' then return filter(section.item) end
+    return section ~= ''
   end
-  common.echo('WarningMsg', 'Invalid section.')
-  return ''
+  return vim.tbl_filter(filter, sections)
+end
+
+local function reload_sections(sections)
+  local function map(section)
+    if type(section) == 'string' then
+      return section
+    elseif type(section) == 'function' then
+      return section()
+    elseif type(section) == 'table' then
+      return {class = section.class or 'none', item = map(section.item)}
+    end
+    common.echo('WarningMsg', 'Invalid section.')
+    return ''
+  end
+  return vim.tbl_map(map, sections)
 end
 
 function M.update()
-  local cache
+  local cache = M.options.sections
   if common.is_active() then
-    cache = vim.tbl_map(update_section, M.options.sections)
+    cache = reload_sections(cache)
+    cache = remove_empty_sections(cache)
+    cache = aggregate_sections(cache)
     api.nvim_win_set_var(g.statusline_winid, 'hardline_cache', cache)
   else
     cache = api.nvim_win_get_var(g.statusline_winid, 'hardline_cache')
   end
-  return table.concat(vim.tbl_map(color_section, cache))
+  return table.concat(color_sections(cache))
 end
 
 -------------------- SETUP -----------------------------

@@ -1,20 +1,20 @@
 local cmd, fn, vim = vim.cmd, vim.fn, vim
 local g = vim.g
-local M = {
-  modes = {
-    ['?'] = {text = '???', color = 'inactive'},
-    ['n'] = {text = 'NORMAL', color = 'normal'},
-    ['c'] = {text = 'COMMAND', color = 'normal'},
-    ['i'] = {text = 'INSERT', color = 'insert'},
-    ['R'] = {text = 'REPLACE', color = 'replace'},
-    ['v'] = {text = 'VISUAL', color = 'visual'},
-    ['V'] = {text = 'V-LINE', color = 'visual'},
-    [''] = {text = 'V-BLOCK', color = 'visual'},
-    ['s'] = {text = 'SELECT', color = 'visual'},
-    ['S'] = {text = 'S-LINE', color = 'visual'},
-    [''] = {text = 'S-BLOCK', color = 'visual'},
-    ['t'] = {text = 'TERMINAL', color = 'normal'},
-  }
+local M = {}
+
+M.modes = {
+  ['?'] = {text = '???', state = 'inactive'},
+  ['n'] = {text = 'NORMAL', state = 'normal'},
+  ['i'] = {text = 'INSERT', state = 'insert'},
+  ['R'] = {text = 'REPLACE', state = 'replace'},
+  ['v'] = {text = 'VISUAL', state = 'visual'},
+  ['V'] = {text = 'V-LINE', state = 'visual'},
+  [''] = {text = 'V-BLOCK', state = 'visual'},
+  ['c'] = {text = 'COMMAND', state = 'normal'},
+  ['s'] = {text = 'SELECT', state = 'visual'},
+  ['S'] = {text = 'S-LINE', state = 'visual'},
+  [''] = {text = 'S-BLOCK', state = 'visual'},
+  ['t'] = {text = 'TERMINAL', state = 'normal'},
 }
 
 function M.echo(hlgroup, msg)
@@ -25,6 +25,14 @@ end
 
 function M.is_active()
   return g.statusline_winid == fn.win_getid()
+end
+
+function M.get_state(class)
+  if class == 'mode' and M.is_active() then
+    local mode = M.modes[fn.mode()] or M.modes['?']
+    return mode.state
+  end
+  return M.is_active() and 'active' or 'inactive'
 end
 
 return M

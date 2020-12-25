@@ -1,4 +1,4 @@
-local common = require('hardline.common')
+local fn = vim.fn
 
 local function get_dots(current, max)
   current = string.len(tostring(current))
@@ -7,23 +7,23 @@ local function get_dots(current, max)
 end
 
 local function get_line()
-  local nb_lines = vim.fn.line('$')
-  local line = vim.fn.line('.')
+  local nb_lines = fn.line('$')
+  local line = fn.line('.')
   local dots = get_dots(line, nb_lines)
   return string.format('%s%d/%d', dots, line, nb_lines)
 end
 
 local function get_column()
-  local nb_columns = vim.fn.col('$') - 1
-  local column = vim.fn.col('.')
+  local nb_columns = fn.col('$') - 1
+  local column = fn.col('.')
   local max_dots = get_dots(nb_columns, 999)
   local dots = get_dots(column, 999)
   return string.format('|%s%d/%s%d', dots, column, max_dots, nb_columns)
 end
 
 local function get_percent()
-  local nb_lines = vim.fn.line('$')
-  local line = vim.fn.line('.')
+  local nb_lines = fn.line('$')
+  local line = fn.line('.')
   local percent = math.floor(line * 100 / nb_lines)
   local dots = get_dots(percent, 100)
   return string.format('|%s%d%%%%', dots, percent)

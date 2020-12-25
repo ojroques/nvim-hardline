@@ -1,6 +1,9 @@
+local fn = vim.fn
+local g = vim.g
+
 local function get_hunks()
-  if not vim.g.loaded_gitgutter then return '' end
-  local summary = vim.fn.GitGutterGetHunkSummary()
+  if not g.loaded_gitgutter then return '' end
+  local summary = fn.GitGutterGetHunkSummary()
   return table.concat({
     string.format('+%d', summary[1]), ' ',
     string.format('~%d', summary[2]), ' ',
@@ -9,8 +12,8 @@ local function get_hunks()
 end
 
 local function get_branch()
-  if not vim.g.loaded_gitgutter then return '' end
-  return string.format('(%s)', vim.fn.FugitiveHead())
+  if not g.loaded_gitgutter then return '' end
+  return string.format('(%s)', fn.FugitiveHead())
 end
 
 local function get_item()

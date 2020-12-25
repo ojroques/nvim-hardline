@@ -1,8 +1,7 @@
 local fn = vim.fn
 
 local function get_item()
-  local name = fn.expand('%:~:.')
-  return table.concat({' ', '%<', name, ' '})
+  return table.concat({' ', fn.expand('%:~:.'), ' %r%m '})
 end
 
 return {

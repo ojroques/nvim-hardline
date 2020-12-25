@@ -13,9 +13,10 @@ M.options = {
   theme = 'default',
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
+    '%<',
     {class = 'high', item = require('hardline.parts.git').get_item},
     {class = 'med', item = require('hardline.parts.filename').get_item},
-    {class = 'med', item = '%='},
+    '%=',
     {class = 'med', item = require('hardline.parts.wordcount').get_item},
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
@@ -36,6 +37,7 @@ local function get_state(class)
 end
 
 local function color_section(section)
+  if type(section) ~= 'table' then return section end
   if not section.class or section.class == 'none' then return section.item end
   local state = get_state(section.class)
   local hlgroup = string.format('Hardline_%s_%s', section.class, state)

@@ -8,12 +8,12 @@ end
 
 local function get_paste()
   if not o.paste then return '' end
-  return '|PASTE'
+  return ' PASTE'
 end
 
 local function get_spell()
   if not wo.spell then return '' end
-  return string.format('|SPELL[%s]', string.upper(bo.spelllang))
+  return string.format(' SPELL[%s]', string.upper(bo.spelllang))
 end
 
 local function get_item()

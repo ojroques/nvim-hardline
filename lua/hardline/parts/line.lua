@@ -1,32 +1,22 @@
 local fn = vim.fn
 
-local function get_dots(current, max)
-  current = string.len(tostring(current))
-  max = string.len(tostring(max))
-  return string.rep('·', max - current)
-end
-
 local function get_line()
   local nb_lines = fn.line('$')
   local line = fn.line('.')
-  local dots = get_dots(line, nb_lines)
-  return string.format('%s%d/%d', dots, line, nb_lines)
+  return string.format('%3d/%3d', line, nb_lines)
 end
 
 local function get_column()
   local nb_columns = fn.col('$') - 1
   local column = fn.col('.')
-  local max_dots = get_dots(nb_columns, 999)
-  local dots = get_dots(column, 999)
-  return string.format('|%s%d/%s%d', dots, column, max_dots, nb_columns)
+  return string.format(' %2d/%2d', column, nb_columns)
 end
 
 local function get_percent()
   local nb_lines = fn.line('$')
   local line = fn.line('.')
   local percent = math.floor(line * 100 / nb_lines)
-  local dots = get_dots(percent, 100)
-  return string.format('|%s%d%%%%', dots, percent)
+  return string.format(' %3d%%%%', percent)
 end
 
 local function get_item()

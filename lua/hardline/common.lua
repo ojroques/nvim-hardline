@@ -35,4 +35,11 @@ function M.get_state(class)
   return M.is_active() and 'active' or 'inactive'
 end
 
+function M.set_cache(augroup)
+  cmd(string.format('augroup %s', augroup))
+  cmd('autocmd!')
+  cmd(string.format('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
+  cmd('augroup END')
+end
+
 return M

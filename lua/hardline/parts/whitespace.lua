@@ -1,5 +1,6 @@
 local cmd, fn, vim = vim.cmd, vim.fn, vim
 local b, bo = vim.b, vim.bo
+local common = require('hardline.common')
 
 local enabled = false
 local cache = ''
@@ -49,10 +50,7 @@ end
 
 local function get_item()
   if not enabled then
-    cmd 'augroup hardline_whitespace'
-    cmd 'autocmd!'
-    cmd 'autocmd CursorHold,BufWritePost * unlet! b:hardline_whitespace'
-    cmd 'augroup END'
+    common.set_cache('hardline_whitespace')
     enabled = true
   end
   if bo.readonly or not bo.modifiable then return '' end

@@ -33,10 +33,7 @@ end
 
 local function get_item()
   if not enabled then
-    cmd 'augroup hardline_wordcount'
-    cmd 'autocmd!'
-    cmd 'autocmd CursorHold,BufWritePost * unlet! b:hardline_wordcount'
-    cmd 'augroup END'
+    common.set_cache('hardline_wordcount')
     enabled = true
   end
   if not vim.tbl_contains(options.filetypes, bo.filetype) then return '' end

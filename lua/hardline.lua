@@ -13,15 +13,15 @@ M.options = {
   theme = 'default',
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
+    {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
     '%<',
-    {class = 'high', item = require('hardline.parts.git').get_item},
     {class = 'med', item = require('hardline.parts.filename').get_item},
     '%=',
-    {class = 'low', item = require('hardline.parts.wordcount').get_item},
+    {class = 'low', item = require('hardline.parts.wordcount').get_item, hide = 80},
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
-    {class = 'high', item = require('hardline.parts.filetype').get_item},
+    {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
     {class = 'mode', item = require('hardline.parts.line').get_item},
   },
 }
@@ -63,9 +63,11 @@ local function aggregate_sections(sections)
   return aggregated
 end
 
-local function remove_empty_sections(sections)
+local function filter_sections(sections)
   local function filter(section)
-    if type(section) == 'table' then return filter(section.item) end
+    if type(section) == 'table' then
+      return section.hide <= fn.winwidth(0) and section.item ~= ''
+    end
     return section ~= ''
   end
   return vim.tbl_filter(filter, sections)
@@ -78,7 +80,11 @@ local function reload_sections(sections)
     elseif type(section) == 'function' then
       return section()
     elseif type(section) == 'table' then
-      return {class = section.class or 'none', item = map(section.item)}
+      return {
+        class = section.class or 'none',
+        item = map(section.item),
+        hide = section.hide or 0,
+      }
     end
     common.echo('WarningMsg', 'Invalid section.')
     return ''
@@ -90,7 +96,7 @@ function M.update()
   local cache = M.options.sections
   if common.is_active() then
     cache = reload_sections(cache)
-    cache = remove_empty_sections(cache)
+    cache = filter_sections(cache)
     cache = aggregate_sections(cache)
     api.nvim_win_set_var(g.statusline_winid, 'hardline_cache', cache)
   else

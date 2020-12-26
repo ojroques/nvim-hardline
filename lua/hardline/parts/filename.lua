@@ -6,8 +6,8 @@ local function get_name()
 end
 
 local function get_readonly()
-  if not bo.readonly then return '' end
-  return '[RO]'
+  if bo.readonly then return '[RO]' end
+  return ''
 end
 
 local function get_modified()

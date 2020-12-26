@@ -91,4 +91,36 @@ return {
     },
     inactive = inactive,
   },
+  bufferline = {
+    conceal = {
+      guifg = colors.comment_grey.gui,
+      guibg = colors.black.gui,
+      ctermfg = colors.comment_grey.cterm,
+      ctermbg = colors.black.cterm,
+    },
+    current = {
+      guifg = colors.black.gui,
+      guibg = colors.green.gui,
+      ctermfg = colors.black.cterm,
+      ctermbg = colors.green.cterm,
+    },
+    current_modified = {
+      guifg = colors.black.gui,
+      guibg = colors.blue.gui,
+      ctermfg = colors.black.cterm,
+      ctermbg = colors.blue.cterm,
+    },
+    background = {
+      guifg = colors.green.gui,
+      guibg = colors.black.gui,
+      ctermfg = colors.green.cterm,
+      ctermbg = colors.black.cterm,
+    },
+    background_modified = {
+      guifg = colors.blue.gui,
+      guibg = colors.black.gui,
+      ctermfg = colors.blue.cterm,
+      ctermbg = colors.black.cterm,
+    },
+  },
 }

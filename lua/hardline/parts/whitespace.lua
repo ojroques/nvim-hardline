@@ -1,4 +1,4 @@
-local cmd, fn, vim = vim.cmd, vim.fn, vim
+local fn, vim = vim.fn, vim
 local b, bo = vim.b, vim.bo
 local common = require('hardline.common')
 

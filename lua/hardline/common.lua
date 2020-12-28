@@ -34,10 +34,9 @@ function M.get_state(section)
   end
   if section.class == 'bufferline' then
     if section.conceal then return 'conceal' end
-    local state = {}
-    table.insert(state, section.current and 'current' or 'background')
-    if section.modified then table.insert(state, 'modified') end
-    return table.concat(state, '_')
+    local state = section.current and 'current' or 'background'
+    if section.modified then state = string.format('%s_modified', state) end
+    return state
   end
   return M.is_active() and 'active' or 'inactive'
 end

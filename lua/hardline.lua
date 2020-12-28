@@ -48,7 +48,7 @@ end
 function M.update_bufferline()
   local sections = {}
   local buffers = bufferline.get_buffers()
-  local separator = {class = 'bufferline', item = '|', conceal = true}
+  local separator = '|'
   for i, buffer in ipairs(buffers) do
     table.insert(sections, bufferline.to_section(buffer))
     if i < #buffers then table.insert(sections, separator) end

@@ -12,7 +12,7 @@ local function get_hunks()
 end
 
 local function get_branch()
-  if not g.loaded_gitgutter then return '' end
+  if not g.loaded_fugitive then return false end
   local branch = fn.FugitiveHead()
   return branch ~= '' and string.format('(%s)', branch) or ''
 end
@@ -20,7 +20,8 @@ end
 local function get_item()
   local hunks, branch = get_hunks(), get_branch()
   if branch == '' then return '' end
-  return table.concat({hunks, ' ' .. branch})
+  branch = not branch and '' or ' ' .. branch
+  return table.concat({hunks, branch})
 end
 
 return {

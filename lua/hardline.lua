@@ -3,7 +3,7 @@
 -- github.com/ojroques
 
 -------------------- VARIABLES -----------------------------
-local api, cmd, fn, vim = vim.api, vim.cmd, vim.fn, vim
+local api, cmd, vim = vim.api, vim.cmd, vim
 local g, o, wo = vim.g, vim.o, vim.wo
 local common = require('hardline.common')
 local statusline = require('hardline.statusline')
@@ -48,11 +48,11 @@ end
 function M.update_bufferline()
   local sections = {}
   local buffers = bufferline.get_buffers()
-  for _, buffer in ipairs(buffers) do
+  local separator = {class = 'bufferline', item = '|', conceal = true}
+  for i, buffer in ipairs(buffers) do
     table.insert(sections, bufferline.to_section(buffer))
-    table.insert(sections, {class = 'bufferline', item = '|', conceal = true})
+    if i < #buffers then table.insert(sections, separator) end
   end
-  table.remove(sections)
   return table.concat(vim.tbl_map(common.color, sections))
 end
 

@@ -25,10 +25,10 @@ local function aggregate_sections(sections)
   return aggregated
 end
 
-local function filter_sections(sections)
+local function remove_empty_sections(sections)
   local function filter(section)
-    if type(section) == 'string' then return section ~= '' end
-    return section.hide <= fn.winwidth(0) and section.item ~= ''
+    if type(section) == 'table' then return section.item ~= '' end
+    return section ~= ''
   end
   return vim.tbl_filter(filter, sections)
 end
@@ -52,8 +52,16 @@ local function reload_sections(sections)
   return vim.tbl_map(map, sections)
 end
 
+local function remove_hidden_sections(sections)
+  local function filter(section)
+    return not section.hide or section.hide <= fn.winwidth(0)
+  end
+  return vim.tbl_filter(filter, sections)
+end
+
 return {
   aggregate_sections = aggregate_sections,
-  filter_sections = filter_sections,
+  remove_empty_sections = remove_empty_sections,
   reload_sections = reload_sections,
+  remove_hidden_sections = remove_hidden_sections,
 }

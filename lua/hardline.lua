@@ -33,8 +33,9 @@ M.options = {
 function M.update_statusline()
   local cache = M.options.sections
   if common.is_active() then
+    cache = statusline.remove_hidden_sections(cache)
     cache = statusline.reload_sections(cache)
-    cache = statusline.filter_sections(cache)
+    cache = statusline.remove_empty_sections(cache)
     cache = statusline.aggregate_sections(cache)
     api.nvim_win_set_var(g.statusline_winid, 'hardline_cache', cache)
   else

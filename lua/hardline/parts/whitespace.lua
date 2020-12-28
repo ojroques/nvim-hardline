@@ -7,11 +7,10 @@ local cache = ''
 local options = {
   c_langs = {'arduino', 'c', 'cpp', 'cuda', 'go', 'javascript', 'ld', 'php'},
   max_lines = 5000,
-  timeout = 100,
 }
 
 local function search(prefix, pattern)
-  local line = fn.search(pattern, 'nw', 0, options.timeout)
+  local line = fn.search(pattern, 'nw')
   if line == 0 then return '' end
   return string.format('[%s:%d]', prefix, line)
 end
@@ -32,8 +31,8 @@ local function check_mix_indent_file()
   if vim.tbl_contains(options.c_langs, bo.filetype) then
     head_spc = [[\v(^ +\*@!)]]
   end
-  local indent_tabs = fn.search([[\v(^\t+)]], 'nw', 0, options.timeout)
-  local indent_spc = fn.search(head_spc, 'nw', 0, options.timeout)
+  local indent_tabs = fn.search([[\v(^\t+)]], 'nw')
+  local indent_spc = fn.search(head_spc, 'nw')
   if indent_tabs == 0 or indent_spc == 0 then return '' end
   return string.format('[mix-indent-file:%d,%d]', indent_spc, indent_tabs)
 end

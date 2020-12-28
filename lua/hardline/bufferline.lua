@@ -1,7 +1,32 @@
-local fn = vim.fn
+local fn, vim = vim.fn, vim
 
 local function exclude(bufnr)
   return (fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf')
+end
+
+local function get_head(path, tail)
+  local result = path
+  for i = 1, #vim.split(tail, '/', true) do
+    result = fn.fnamemodify(result, ':~:h')
+  end
+  return fn.fnamemodify(result, ':t')
+end
+
+local function unique_tail(buffers)
+  local hist = {}
+  local duplicate = false
+  for _, buffer in ipairs(buffers) do
+    hist[buffer.name] = not hist[buffer.name] and 1 or hist[buffer.name] + 1
+    duplicate = duplicate or hist[buffer.name] > 1
+  end
+  if not duplicate then return end
+  for _, buffer in ipairs(buffers) do
+    if hist[buffer.name] > 1 then
+      local parent = get_head(fn.bufname(buffer.bufnr), buffer.name)
+      buffer.name = string.format('%s/%s', parent, buffer.name)
+    end
+  end
+  unique_tail(buffers)
 end
 
 local function to_section(buffer)
@@ -37,6 +62,7 @@ local function get_buffers()
       })
     end
   end
+  unique_tail(buffers)
   return buffers
 end
 

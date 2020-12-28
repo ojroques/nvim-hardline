@@ -65,12 +65,13 @@ end
 local function set_hlgroups()
   for class, attr in pairs(M.options.theme) do
     for state, args in pairs(attr) do
+      local hlgroup = string.format('Hardline_%s_%s', class, state)
       local a = {}
       for k, v in pairs(args) do
         table.insert(a, string.format('%s=%s', k, v))
       end
       a = table.concat(a, ' ')
-      cmd(string.format('hi Hardline_%s_%s %s', class, state, a))
+      cmd(string.format('autocmd ColorScheme * hi %s %s', hlgroup, a))
     end
   end
 end

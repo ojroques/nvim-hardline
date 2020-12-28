@@ -37,13 +37,12 @@ local function to_section(buffer)
   if buffer.flags.readonly then table.insert(flags, '[RO]') end
   flags = table.concat(flags)
   item = flags == '' and item or string.format('%s %s', item, flags)
-  local section = {
+  return {
     class = 'bufferline',
     item = string.format(' %s ', item),
     modified = buffer.flags.modified,
     current = buffer.current,
   }
-  return section
 end
 
 local function get_buffers()
@@ -53,12 +52,12 @@ local function get_buffers()
       table.insert(buffers, {
         bufnr = nr,
         name = fn.fnamemodify(fn.bufname(nr), ':t'),
+        current = nr == fn.bufnr('%'),
         flags = {
           modified = fn.getbufvar(nr, '&modified') == 1,
           modifiable = fn.getbufvar(nr, '&modifiable') == 1,
           readonly = fn.getbufvar(nr, '&readonly') == 1,
         },
-        current = nr == fn.bufnr('%'),
       })
     end
   end

@@ -3,12 +3,13 @@
 -- github.com/ojroques
 
 -------------------- VARIABLES -----------------------------
-local api, cmd, vim = vim.api, vim.cmd, vim
+local cmd, vim = vim.cmd, vim
 local g, o, wo = vim.g, vim.o, vim.wo
 local common = require('hardline.common')
 local statusline = require('hardline.statusline')
 local bufferline = require('hardline.bufferline')
 local M = {}
+local cache = {}
 
 -------------------- OPTIONS -------------------------------
 M.options = {
@@ -31,17 +32,18 @@ M.options = {
 
 -------------------- STATUSLINE ----------------------------
 function M.update_statusline()
-  local cache = M.options.sections
-  if common.is_active() then
-    cache = statusline.remove_hidden_sections(cache)
-    cache = statusline.reload_sections(cache)
-    cache = statusline.remove_empty_sections(cache)
-    cache = statusline.aggregate_sections(cache)
-    api.nvim_win_set_var(g.statusline_winid, 'hardline_cache', cache)
+  local sections = M.options.sections
+  if common.is_active() or not cache.previous then
+    sections = statusline.remove_hidden_sections(sections)
+    sections = statusline.reload_sections(sections)
+    sections = statusline.remove_empty_sections(sections)
+    sections = statusline.aggregate_sections(sections)
+    cache.previous = cache.current
+    cache.current = sections
   else
-    cache = api.nvim_win_get_var(g.statusline_winid, 'hardline_cache')
+    sections = cache.previous
   end
-  return table.concat(vim.tbl_map(common.color, cache))
+  return table.concat(vim.tbl_map(common.color, sections))
 end
 
 -------------------- BUFFERLINE ----------------------------

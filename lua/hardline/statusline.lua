@@ -27,8 +27,7 @@ end
 
 local function remove_empty_sections(sections)
   local filter = function(s)
-    if type(s) == 'table' then return s.item ~= '' end
-    return s ~= ''
+    if type(s) == 'table' then return s.item ~= '' else return s ~= '' end
   end
   return vim.tbl_filter(filter, sections)
 end
@@ -43,7 +42,6 @@ local function reload_sections(sections)
       return {
         class = section.class or 'none',
         item = map(section.item),
-        hide = section.hide or 0,
       }
     end
     common.echo('WarningMsg', 'Invalid section.')

@@ -5,9 +5,9 @@ local function exclude(bufnr)
 end
 
 local function get_head(path, tail)
-  local result = path
-  for i = 1, #vim.split(tail, '/', true) do
-    result = fn.fnamemodify(result, ':~:h')
+  local result = fn.fnamemodify(path, ':p')
+  for i = 1, #vim.split(tail, '/') do
+    result = fn.fnamemodify(result, ':h')
   end
   return fn.fnamemodify(result, ':t')
 end

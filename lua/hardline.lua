@@ -32,16 +32,14 @@ M.options = {
 
 -------------------- STATUSLINE ----------------------------
 function M.update_statusline()
-  local sections = M.options.sections
-  if common.is_active() or not cache.previous then
+  local sections = cache.previous
+  if common.is_active() or not sections then
+    sections = M.options.sections
     sections = statusline.remove_hidden_sections(sections)
     sections = statusline.reload_sections(sections)
     sections = statusline.remove_empty_sections(sections)
     sections = statusline.aggregate_sections(sections)
-    cache.previous = cache.current
-    cache.current = sections
-  else
-    sections = cache.previous
+    cache.previous, cache.current = cache.current, sections
   end
   return table.concat(vim.tbl_map(common.color, sections))
 end

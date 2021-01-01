@@ -92,7 +92,7 @@ return {
     inactive = inactive,
   },
   bufferline = {
-    conceal = {
+    separator = {
       guifg = colors.comment_grey.gui,
       guibg = colors.black.gui,
       ctermfg = colors.comment_grey.cterm,

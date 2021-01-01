@@ -33,7 +33,7 @@ function M.get_state(section)
     return mode.state
   end
   if section.class == 'bufferline' then
-    if section.conceal then return 'conceal' end
+    if section.separator then return 'separator' end
     local state = section.current and 'current' or 'background'
     if section.modified then state = string.format('%s_modified', state) end
     return state

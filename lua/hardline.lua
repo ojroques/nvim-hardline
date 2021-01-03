@@ -78,6 +78,7 @@ local function set_hlgroups()
 end
 
 local function set_statusline()
+  o.showmode = false
   o.statusline = [[%!luaeval('require("hardline").update_statusline()')]]
   wo.statusline = o.statusline
 end

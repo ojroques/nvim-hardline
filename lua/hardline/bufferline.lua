@@ -1,7 +1,10 @@
 local fn, vim = vim.fn, vim
 
 local function exclude(bufnr)
-  return (fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf')
+  return (
+    fn.buflisted(bufnr) == 0 or
+    fn.getbufvar(bufnr, '&filetype') == 'qf'
+  )
 end
 
 local function get_head(path, tail)
@@ -16,7 +19,11 @@ local function unique_tail(buffers)
   local hist = {}
   local duplicate = false
   for _, buffer in ipairs(buffers) do
-    hist[buffer.name] = not hist[buffer.name] and 1 or hist[buffer.name] + 1
+    if not hist[buffer.name] then
+      hist[buffer.name] = 1
+    elseif buffer.name ~= '' then
+      hist[buffer.name] = hist[buffer.name] + 1
+    end
     duplicate = duplicate or hist[buffer.name] > 1
   end
   if not duplicate then return end

@@ -14,7 +14,7 @@ M.modes = {
   ['s'] = {text = 'SELECT', state = 'visual'},
   ['S'] = {text = 'S-LINE', state = 'visual'},
   [''] = {text = 'S-BLOCK', state = 'visual'},
-  ['t'] = {text = 'TERMINAL', state = 'normal'},
+  ['t'] = {text = 'TERMINAL', state = 'insert'},
 }
 
 function M.echo(hlgroup, msg)

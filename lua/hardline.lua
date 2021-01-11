@@ -72,7 +72,7 @@ local function set_hlgroups()
         table.insert(a, string.format('%s=%s', k, v))
       end
       a = table.concat(a, ' ')
-      cmd(string.format('autocmd ColorScheme * hi %s %s', hlgroup, a))
+      cmd(string.format('autocmd VimEnter,ColorScheme * hi %s %s', hlgroup, a))
     end
   end
 end

@@ -17,10 +17,10 @@ local function get_modified()
 end
 
 local function get_item()
-  local name, readonly, modified = get_name(), get_readonly(), get_modified()
-  if readonly ~= '' then readonly = ' ' .. readonly end
-  if modified ~= '' then modified = ' ' .. modified end
-  return table.concat({name, readonly, modified})
+  local name = get_name()
+  local flags = table.concat({get_readonly(), get_modified()})
+  if flags ~= '' then flags = ' ' .. flags end
+  return table.concat({name, flags})
 end
 
 return {

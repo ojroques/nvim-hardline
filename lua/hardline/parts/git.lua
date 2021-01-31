@@ -2,8 +2,15 @@ local fn = vim.fn
 local g = vim.g
 
 local function get_hunks()
-  if not g.loaded_gitgutter then return '' end
-  local summary = fn.GitGutterGetHunkSummary()
+  local summary
+  if g.loaded_gitgutter then
+    summary = fn.GitGutterGetHunkSummary()
+  elseif g.loaded_signify then
+    summary = fn['sy#repo#get_stats']()
+  else
+    -- return empty string if none of them is loaded
+    return ''
+  end
   return table.concat({
     string.format('+%d', summary[1]),
     string.format('~%d', summary[2]),

@@ -12,8 +12,12 @@ local function get_hunks()
 end
 
 local function get_branch()
-  if not g.loaded_fugitive then return false end
-  local branch = fn.FugitiveHead()
+  local branch
+  if g.loaded_fugitive then
+    branch = fn.FugitiveHead()
+  elseif g.loaded_gina then
+    branch = fn['gina#component#repo#branch']()
+  end
   return branch ~= '' and string.format('(%s)', branch) or ''
 end
 

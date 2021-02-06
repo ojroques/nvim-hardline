@@ -10,11 +10,11 @@ M.modes = {
   ['v'] = {text = 'VISUAL', state = 'visual'},
   ['V'] = {text = 'V-LINE', state = 'visual'},
   [''] = {text = 'V-BLOCK', state = 'visual'},
-  ['c'] = {text = 'COMMAND', state = 'normal'},
+  ['c'] = {text = 'COMMAND', state = 'command'},
   ['s'] = {text = 'SELECT', state = 'visual'},
   ['S'] = {text = 'S-LINE', state = 'visual'},
   [''] = {text = 'S-BLOCK', state = 'visual'},
-  ['t'] = {text = 'TERMINAL', state = 'insert'},
+  ['t'] = {text = 'TERMINAL', state = 'command'},
 }
 
 function M.echo(hlgroup, msg)

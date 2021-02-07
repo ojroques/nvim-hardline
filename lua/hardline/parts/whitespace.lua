@@ -49,7 +49,7 @@ end
 
 local function get_item()
   if not enabled then
-    common.set_cache('hardline_whitespace')
+    common.set_cache_autocmds('hardline_whitespace')
     enabled = true
   end
   if bo.readonly or not bo.modifiable then return '' end

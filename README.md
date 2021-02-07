@@ -14,17 +14,12 @@ plugin though._
 
 #### With Packer:
 ```lua
-cmd 'packadd packer.nvim'
-return require('packer').startup(function()
-  use {'ojroques/nvim-hardline'}
-end)
+use {'ojroques/nvim-hardline'}
 ```
 
 #### With Plug
 ```vim
-call plug#begin()
 Plug 'ojroques/nvim-hardline'
-call plug#end()
 ```
 
 ## Usage

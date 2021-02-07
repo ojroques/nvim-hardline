@@ -33,7 +33,7 @@ end
 
 local function get_item()
   if not enabled then
-    common.set_cache('hardline_wordcount')
+    common.set_cache_autocmds('hardline_wordcount')
     enabled = true
   end
   if not vim.tbl_contains(options.filetypes, bo.filetype) then return '' end

@@ -4,7 +4,7 @@
 
 -------------------- VARIABLES -----------------------------
 local fn, cmd, vim = vim.fn, vim.cmd, vim
-local g, o, wo = vim.g, vim.o, vim.wo
+local o, wo = vim.o, vim.wo
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
 local M = {}

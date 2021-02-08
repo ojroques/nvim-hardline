@@ -1,5 +1,6 @@
 local fn, vim = vim.fn, vim
 local b, bo = vim.b, vim.bo
+local fmt = string.format
 local common = require('hardline.common')
 
 local enabled = false
@@ -11,8 +12,10 @@ local options = {
 
 local function search(prefix, pattern)
   local line = fn.search(pattern, 'nw')
-  if line == 0 then return '' end
-  return string.format('[%s:%d]', prefix, line)
+  if line == 0 then
+    return ''
+  end
+  return fmt('[%s:%d]', prefix, line)
 end
 
 local function check_trailing()
@@ -21,8 +24,8 @@ end
 
 local function check_mix_indent()
   local tst = [[(^\t* +\t\s*\S)]]
-  local tls = string.format([[(^\t+ {%d,}\S)]], bo.tabstop)
-  local pattern = string.format([[\v%s|%s]], tst, tls)
+  local tls = fmt([[(^\t+ {%d,}\S)]], bo.tabstop)
+  local pattern = fmt([[\v%s|%s]], tst, tls)
   return search('mix-indent', pattern)
 end
 
@@ -33,8 +36,10 @@ local function check_mix_indent_file()
   end
   local indent_tabs = fn.search([[\v(^\t+)]], 'nw')
   local indent_spc = fn.search(head_spc, 'nw')
-  if indent_tabs == 0 or indent_spc == 0 then return '' end
-  return string.format('[mix-indent-file:%d,%d]', indent_spc, indent_tabs)
+  if indent_tabs == 0 or indent_spc == 0 then
+    return ''
+  end
+  return fmt('[mix-indent-file:%d,%d]', indent_spc, indent_tabs)
 end
 
 local function check_conflict()
@@ -43,7 +48,7 @@ local function check_conflict()
   if bo.filetype == 'rst' then
     raw_pattern = [[^\%%(\%%(<\{7} %s\)\|\%%(>\{7\} %s\)\)$]]
   end
-  local pattern = string.format(raw_pattern, annotation, annotation)
+  local pattern = fmt(raw_pattern, annotation, annotation)
   return search('conflict', pattern)
 end
 
@@ -52,9 +57,15 @@ local function get_item()
     common.set_cache_autocmds('hardline_whitespace')
     enabled = true
   end
-  if bo.readonly or not bo.modifiable then return '' end
-  if fn.line('$') > options.max_lines then return '' end
-  if b.hardline_whitespace then return cache end
+  if bo.readonly or not bo.modifiable then
+    return ''
+  end
+  if fn.line('$') > options.max_lines then
+    return ''
+  end
+  if b.hardline_whitespace then
+    return cache
+  end
   b.hardline_whitespace = true
   cache = table.concat({
     check_trailing(),

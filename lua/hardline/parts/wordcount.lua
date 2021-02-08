@@ -1,5 +1,6 @@
 local fn, vim = vim.fn, vim
 local b, bo = vim.b, vim.bo
+local fmt = string.format
 local common = require('hardline.common')
 
 local enabled = false
@@ -28,7 +29,7 @@ end
 local function get_wordcount()
   local query = in_visual() and 'visual_words' or 'words'
   local wordcount = fn.wordcount()[query]
-  return string.format('%d words', wordcount)
+  return fmt('%d words', wordcount)
 end
 
 local function get_item()
@@ -36,9 +37,15 @@ local function get_item()
     common.set_cache_autocmds('hardline_wordcount')
     enabled = true
   end
-  if not vim.tbl_contains(options.filetypes, bo.filetype) then return '' end
-  if fn.line('$') > options.max_lines then return '' end
-  if b.hardline_wordcount and not in_visual() then return cache end
+  if not vim.tbl_contains(options.filetypes, bo.filetype) then
+    return ''
+  end
+  if fn.line('$') > options.max_lines then
+    return ''
+  end
+  if b.hardline_wordcount and not in_visual() then
+    return cache
+  end
   b.hardline_wordcount = true
   cache = get_wordcount()
   return cache

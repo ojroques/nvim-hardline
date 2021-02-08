@@ -1,10 +1,8 @@
 local fn, vim = vim.fn, vim
+local fmt = string.format
 
 local function exclude(bufnr)
-  return (
-    fn.buflisted(bufnr) == 0 or
-    fn.getbufvar(bufnr, '&filetype') == 'qf'
-  )
+  return fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf'
 end
 
 local function get_head(path, tail)
@@ -26,11 +24,13 @@ local function unique_tail(buffers)
     end
     duplicate = duplicate or hist[buffer.name] > 1
   end
-  if not duplicate then return end
+  if not duplicate then
+    return
+  end
   for _, buffer in ipairs(buffers) do
     if hist[buffer.name] > 1 then
       local parent = get_head(fn.bufname(buffer.bufnr), buffer.name)
-      buffer.name = string.format('%s/%s', parent, buffer.name)
+      buffer.name = fmt('%s/%s', parent, buffer.name)
     end
   end
   unique_tail(buffers)
@@ -39,14 +39,20 @@ end
 local function to_section(buffer)
   local flags = {}
   local item = buffer.name == '' and '[No Name]' or buffer.name
-  if buffer.flags.modified then table.insert(flags, '[+]') end
-  if not buffer.flags.modifiable then table.insert(flags, '[-]') end
-  if buffer.flags.readonly then table.insert(flags, '[RO]') end
+  if buffer.flags.modified then
+    table.insert(flags, '[+]')
+  end
+  if not buffer.flags.modifiable then
+    table.insert(flags, '[-]')
+  end
+  if buffer.flags.readonly then
+    table.insert(flags, '[RO]')
+  end
   flags = table.concat(flags)
-  item = flags == '' and item or string.format('%s %s', item, flags)
+  item = flags == '' and item or fmt('%s %s', item, flags)
   return {
     class = 'bufferline',
-    item = string.format(' %s ', item),
+    item = fmt(' %s ', item),
     modified = buffer.flags.modified,
     current = buffer.current,
   }

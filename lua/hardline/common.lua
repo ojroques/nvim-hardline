@@ -1,5 +1,6 @@
 local cmd, fn = vim.cmd, vim.fn
 local g = vim.g
+local fmt = string.format
 local M = {}
 
 M.modes = {
@@ -18,8 +19,8 @@ M.modes = {
 }
 
 function M.echo(hlgroup, msg)
-  cmd(string.format('echohl %s', hlgroup))
-  cmd(string.format('echo "[hardline] %s"', msg))
+  cmd(fmt('echohl %s', hlgroup))
+  cmd(fmt('echo "[hardline] %s"', msg))
   cmd('echohl None')
 end
 
@@ -28,9 +29,9 @@ function M.is_active()
 end
 
 function M.set_cache_autocmds(augroup)
-  cmd(string.format('augroup %s', augroup))
+  cmd(fmt('augroup %s', augroup))
   cmd('autocmd!')
-  cmd(string.format('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
+  cmd(fmt('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
   cmd('augroup END')
 end
 

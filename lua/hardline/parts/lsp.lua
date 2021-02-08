@@ -1,9 +1,12 @@
 local lsp = vim.lsp
+local fmt = string.format
 
 local function get_diagnostic(prefix, severity)
   local count = lsp.diagnostic.get_count(0, severity)
-  if count < 1 then return '' end
-  return string.format('%s:%d', prefix, count)
+  if count < 1 then
+    return ''
+  end
+  return fmt('%s:%d', prefix, count)
 end
 
 local function get_error()

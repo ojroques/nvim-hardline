@@ -5,6 +5,7 @@
 -------------------- VARIABLES -----------------------------
 local fn, cmd, vim = vim.fn, vim.cmd, vim
 local o, wo = vim.o, vim.wo
+local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
 local M = {}
@@ -40,7 +41,7 @@ local function aggregate_sections(sections)
         if stop then
           table.insert(aggregated, {
             class = sections[pivot].class,
-            item = string.format(' %s ', table.concat(items, ' ')),
+            item = fmt(' %s ', table.concat(items, ' ')),
           })
           pivot = j
           break
@@ -56,57 +57,82 @@ local function aggregate_sections(sections)
 end
 
 local function remove_empty_sections(sections)
-  local filter = function(s)
-    if type(s) == 'table' then return s.item ~= '' else return s ~= '' end
+  local filter = function(section)
+    if type(section) == 'table' then
+      return section.item ~= ''
+    end
+    return section ~= ''
   end
   return vim.tbl_filter(filter, sections)
 end
 
-local function reload_sections(sections)
-  local function map(section)
-    if type(section) == 'string' then
-      return section
-    elseif type(section) == 'function' then
-      return section()
-    elseif type(section) == 'table' then
-      return {
-        class = section.class or 'none',
-        item = map(section.item),
-      }
-    end
-    common.echo('WarningMsg', 'Invalid section.')
-    return ''
+local function load_section(section)
+  if type(section) == 'string' then
+    return section
   end
-  return vim.tbl_map(map, sections)
+  if type(section) == 'function' then
+    return section()
+  end
+  if type(section) == 'table' then
+    return {
+      class = section.class or 'none',
+      item = load_section(section.item),
+    }
+  end
+  common.echo('WarningMsg', 'Invalid section.')
+  return ''
+end
+
+local function load_sections(sections)
+  return vim.tbl_map(load_section, sections)
 end
 
 local function remove_hidden_sections(sections)
-  local filter = function(s) return not s.hide or s.hide <= fn.winwidth(0) end
+  local filter = function(s)
+    return not s.hide or s.hide <= fn.winwidth(0)
+  end
   return vim.tbl_filter(filter, sections)
 end
 
 -------------------- SECTION HIGHLIGHTING ------------------
 local function get_section_state(section)
-  if section.class == 'mode' and common.is_active() then
-    local mode = common.modes[fn.mode()] or common.modes['?']
-    return mode.state
+  if section.class == 'mode' then
+    if common.is_active() then
+      local mode = common.modes[fn.mode()] or common.modes['?']
+      return mode.state
+    end
+    return common.is_active() and 'active' or 'inactive'
   end
   if section.class == 'bufferline' then
-    if section.separator then return 'separator' end
+    if section.separator then
+      return 'separator'
+    end
     local state = section.current and 'current' or 'background'
-    if section.modified then state = string.format('%s_modified', state) end
+    if section.modified then
+      state = fmt('%s_modified', state)
+    end
     return state
   end
-  return common.is_active() and 'active' or 'inactive'
+  return ''
 end
 
-local function color_section(section)
-  if type(section) ~= 'table' then return section end
-  if section.class == 'none' then return section.item end
+local function highlight_section(section)
+  if type(section) ~= 'table' then
+    return section
+  end
+  if section.class == 'none' then
+    return section.item
+  end
   local state = get_section_state(section)
-  local hlgroup = string.format('Hardline_%s_%s', section.class, state)
-  if fn.hlexists(hlgroup) == 0 then return section.item end
-  return string.format('%%#%s#%s%%*', hlgroup, section.item)
+  local hlgroup = fmt('Hardline_%s_%s', section.class, state)
+  if fn.hlexists(hlgroup) == 0 then
+    return section.item
+  end
+  return fmt('%%#%s#%s%%*', hlgroup, section.item)
+end
+
+local function highlight_sections(sections)
+  return vim.tbl_map(highlight_section, sections)
 end
 
 -------------------- STATUSLINE ----------------------------
@@ -115,12 +141,12 @@ function M.update_statusline()
   if common.is_active() or not sections then
     sections = M.options.sections
     sections = remove_hidden_sections(sections)
-    sections = reload_sections(sections)
+    sections = load_sections(sections)
     sections = remove_empty_sections(sections)
     sections = aggregate_sections(sections)
     cache.previous, cache.current = cache.current, sections
   end
-  return table.concat(vim.tbl_map(color_section, sections))
+  return table.concat(highlight_sections(sections))
 end
 
 -------------------- BUFFERLINE ----------------------------
@@ -130,28 +156,32 @@ function M.update_bufferline()
   local separator = '|'
   for i, buffer in ipairs(buffers) do
     table.insert(sections, bufferline.to_section(buffer))
-    if i < #buffers then table.insert(sections, separator) end
+    if i < #buffers then
+      table.insert(sections, separator)
+    end
   end
-  return table.concat(vim.tbl_map(color_section, sections))
+  return table.concat(highlight_sections(sections))
 end
 
 -------------------- SETUP -----------------------------
 local function set_theme()
-  if type(M.options.theme) ~= 'string' then return end
-  local theme = string.format('hardline.themes.%s', M.options.theme)
+  if type(M.options.theme) ~= 'string' then
+    return
+  end
+  local theme = fmt('hardline.themes.%s', M.options.theme)
   M.options.theme = require(theme)
 end
 
 local function set_hlgroups()
   for class, attr in pairs(M.options.theme) do
     for state, args in pairs(attr) do
-      local hlgroup = string.format('Hardline_%s_%s', class, state)
+      local hlgroup = fmt('Hardline_%s_%s', class, state)
       local a = {}
       for k, v in pairs(args) do
-        table.insert(a, string.format('%s=%s', k, v))
+        table.insert(a, fmt('%s=%s', k, v))
       end
       a = table.concat(a, ' ')
-      cmd(string.format('autocmd VimEnter,ColorScheme * hi %s %s', hlgroup, a))
+      cmd(fmt('autocmd VimEnter,ColorScheme * hi %s %s', hlgroup, a))
     end
   end
 end
@@ -172,7 +202,9 @@ function M.setup(user_options)
   set_theme()
   set_hlgroups()
   set_statusline()
-  if M.options.bufferline then set_bufferline() end
+  if M.options.bufferline then
+    set_bufferline()
+  end
 end
 
 ------------------------------------------------------------

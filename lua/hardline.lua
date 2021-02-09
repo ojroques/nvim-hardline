@@ -113,7 +113,7 @@ local function get_section_state(section)
     end
     return state
   end
-  return ''
+  return common.is_active() and 'active' or 'inactive'
 end
 
 local function highlight_section(section)

@@ -1,7 +1,7 @@
 local fn, vim = vim.fn, vim
 local fmt = string.format
 
-local function exclude(bufnr)
+local function is_excluded(bufnr)
   return fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf'
 end
 
@@ -61,7 +61,7 @@ end
 local function get_buffers()
   local buffers = {}
   for nr = 1, fn.bufnr('$') do
-    if not exclude(nr) then
+    if not is_excluded(nr) then
       table.insert(buffers, {
         bufnr = nr,
         name = fn.fnamemodify(fn.bufname(nr), ':t'),

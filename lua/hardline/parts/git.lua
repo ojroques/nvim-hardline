@@ -27,6 +27,8 @@ local function get_branch()
     branch = fn.FugitiveHead()
   elseif g.loaded_gina then
     branch = fn['gina#component#repo#branch']()
+  elseif g.loaded_gitbranch then
+    branch = fn['gitbranch#name']()
   end
   return branch ~= '' and fmt('(%s)', branch) or ''
 end

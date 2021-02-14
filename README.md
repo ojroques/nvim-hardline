@@ -75,7 +75,7 @@ that list is a table with the following attributes:
 |------|-------------|
 | `filename` | Filename and file status (readonly, modified, ...) |
 | `filetype` | Filetype |
-| `git` | Git hunks (requires [vim-gitgutter](https://github.com/airblade/vim-gitgutter)) and Git branch (requires [vim-fugitive](https://github.com/tpope/vim-fugitive)) |
+| `git` | Git hunks (requires [vim-gitgutter](https://github.com/airblade/vim-gitgutter) / [vim-signify](https://github.com/mhinz/vim-signify)) and Git branch (requires [vim-fugitive](https://github.com/tpope/vim-fugitive) / [gina.vim](https://github.com/lambdalisue/gina.vim) / [vim-branchname](https://github.com/itchyny/vim-gitbranch)) |
 | `line` | Line and column positions |
 | `lsp` | Diagnostics from Neovim LSP client |
 | `mode` | Current mode |

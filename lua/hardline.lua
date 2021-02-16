@@ -32,25 +32,24 @@ M.options = {
 
 -------------------- SECTION MANAGEMENT --------------------
 local function aggregate_sections(sections)
-  local aggregated, pivot, stop = {}, 1
-  while pivot <= #sections do
-    if type(sections[pivot]) == 'table' then
+  local aggregated, piv = {}, 1
+  while piv <= #sections do
+    if type(sections[piv]) == 'table' then
       local items = {}
-      for j = pivot, #sections + 1 do
-        stop = j == #sections + 1 or sections[j].class ~= sections[pivot].class
-        if stop then
+      for j = piv, #sections + 1 do
+        if j == #sections + 1 or sections[j].class ~= sections[piv].class then
           table.insert(aggregated, {
-            class = sections[pivot].class,
+            class = sections[piv].class,
             item = fmt(' %s ', table.concat(items, ' ')),
           })
-          pivot = j
+          piv = j
           break
         end
         table.insert(items, sections[j].item)
       end
     else
-      table.insert(aggregated, sections[pivot])
-      pivot = pivot + 1
+      table.insert(aggregated, sections[piv])
+      piv = piv + 1
     end
   end
   return aggregated
@@ -101,7 +100,6 @@ local function get_section_state(section)
       local mode = common.modes[fn.mode()] or common.modes['?']
       return mode.state
     end
-    return common.is_active() and 'active' or 'inactive'
   end
   if section.class == 'bufferline' then
     if section.separator then

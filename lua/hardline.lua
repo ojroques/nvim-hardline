@@ -6,6 +6,7 @@
 local fn, cmd, vim = vim.fn, vim.cmd, vim
 local o, wo = vim.o, vim.wo
 local fmt = string.format
+local colors_utils = require('hardline.colors.utils')
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
 local M = {}
@@ -14,7 +15,8 @@ local cache = {}
 -------------------- OPTIONS -------------------------------
 M.options = {
   bufferline = false,
-  theme = 'default',
+  theme =  nil,  -- Set a `full theme` or a theme name
+  colors = nil, -- or a color map to construct the theme
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -163,11 +165,19 @@ end
 
 -------------------- SETUP -----------------------------
 local function set_theme()
-  if type(M.options.theme) ~= 'string' then
-    return
+  if  type(M.options.theme) == 'table' then
+      return
   end
-  local theme = fmt('hardline.themes.%s', M.options.theme)
-  M.options.theme = require(theme)
+
+  local theme = {}
+  if  type(M.options.theme) == 'string' then
+    theme = require(fmt('hardline.themes.%s', M.options.theme))
+  end
+
+  if M.options.colors then 
+      theme = M.options.colors
+  end
+  M.options.theme = colors_utils.palette_to_theme(theme)
 end
 
 local function set_hlgroups()

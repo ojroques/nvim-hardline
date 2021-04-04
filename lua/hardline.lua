@@ -14,6 +14,9 @@ local cache = {}
 -------------------- OPTIONS -------------------------------
 M.options = {
   bufferline = false,
+  bufferline_settings = {
+      exclude_terminal = false,
+  },
   theme = 'default',
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
@@ -150,7 +153,7 @@ end
 -------------------- BUFFERLINE ----------------------------
 function M.update_bufferline()
   local sections = {}
-  local buffers = bufferline.get_buffers()
+  local buffers = bufferline.get_buffers(M.options.bufferline_settings)
   local separator = '|'
   for i, buffer in ipairs(buffers) do
     table.insert(sections, bufferline.to_section(buffer))

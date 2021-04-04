@@ -1,8 +1,12 @@
 local fn, vim = vim.fn, vim
 local fmt = string.format
 
-local function is_excluded(bufnr)
-  return fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf'
+local function is_excluded(bufnr, settings)
+  local excluded = fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf'
+  if settings.exclude_terminal then
+    excluded = excluded or fn.getbufvar(bufnr, '&buftype') == 'terminal'
+  end
+  return excluded
 end
 
 local function get_head(path, tail)
@@ -58,10 +62,10 @@ local function to_section(buffer)
   }
 end
 
-local function get_buffers()
+local function get_buffers(settings)
   local buffers = {}
   for nr = 1, fn.bufnr('$') do
-    if not is_excluded(nr) then
+    if not is_excluded(nr, settings) then
       table.insert(buffers, {
         bufnr = nr,
         name = fn.fnamemodify(fn.bufname(nr), ':t'),

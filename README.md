@@ -53,6 +53,10 @@ require('hardline').setup {
     {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
     {class = 'mode', item = require('hardline.parts.line').get_item},
   },
+  bufferline_settings = {
+    exclude_terminal = false,  -- don't show terminal buffers in bufferline
+    show_index = false,        -- show buffer indexes (not the actual buffer numbers) in bufferline
+  },
 }
 ```
 

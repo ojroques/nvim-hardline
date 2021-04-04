@@ -16,6 +16,7 @@ M.options = {
   bufferline = false,
   bufferline_settings = {
       exclude_terminal = false,
+      show_index = false,
   },
   theme = 'default',
   sections = {
@@ -153,10 +154,11 @@ end
 -------------------- BUFFERLINE ----------------------------
 function M.update_bufferline()
   local sections = {}
-  local buffers = bufferline.get_buffers(M.options.bufferline_settings)
+  local settings = M.options.bufferline_settings
+  local buffers = bufferline.get_buffers(settings)
   local separator = '|'
   for i, buffer in ipairs(buffers) do
-    table.insert(sections, bufferline.to_section(buffer))
+    table.insert(sections, bufferline.to_section(buffer, i, settings))
     if i < #buffers then
       table.insert(sections, separator)
     end

@@ -40,7 +40,7 @@ local function unique_tail(buffers)
   unique_tail(buffers)
 end
 
-local function to_section(buffer)
+local function to_section(buffer, idx, settings)
   local flags = {}
   local item = buffer.name == '' and '[No Name]' or buffer.name
   if buffer.flags.modified then
@@ -54,9 +54,14 @@ local function to_section(buffer)
   end
   flags = table.concat(flags)
   item = flags == '' and item or fmt('%s %s', item, flags)
+  if settings.show_index then
+    item = fmt(' %d:%s ', idx, item)
+  else
+    item = fmt(' %s ', item)
+  end
   return {
     class = 'bufferline',
-    item = fmt(' %s ', item),
+    item = item,
     modified = buffer.flags.modified,
     current = buffer.current,
   }

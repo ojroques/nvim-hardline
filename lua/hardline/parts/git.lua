@@ -45,7 +45,11 @@ end
 local function get_item()
   local hunks, branch = get_hunks(), get_branch()
   if branch == '' then
-    return ''
+    if hunks == '+0 ~0 -0' then
+      return ''
+    else
+      return hunks
+    end
   end
   branch = not branch and '' or ' ' .. branch
   return table.concat({hunks, branch})

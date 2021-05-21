@@ -98,9 +98,9 @@ local function remove_hidden_sections(sections)
 end
 
 -------------------- SECTION HIGHLIGHTING ------------------
-local function get_section_state(section)
+local function get_section_state(section, active)
   if section.class == 'mode' then
-    if common.is_active() then
+    if active then
       local mode = common.modes[fn.mode()] or common.modes['?']
       return mode.state
     end
@@ -115,40 +115,35 @@ local function get_section_state(section)
     end
     return state
   end
-  return common.is_active() and 'active' or 'inactive'
+  return active and 'active' or 'inactive'
 end
 
-local function highlight_section(section)
-  if type(section) ~= 'table' then
-    return section
+local function highlight_sections(sections, active)
+  local highlight_section = function(section)
+    if type(section) ~= 'table' then
+      return section
+    end
+    if section.class == 'none' then
+      return section.item
+    end
+    local state = get_section_state(section, active)
+    local hlgroup = fmt('Hardline_%s_%s', section.class, state)
+    if fn.hlexists(hlgroup) == 0 then
+      return section.item
+    end
+    return fmt('%%#%s#%s%%*', hlgroup, section.item)
   end
-  if section.class == 'none' then
-    return section.item
-  end
-  local state = get_section_state(section)
-  local hlgroup = fmt('Hardline_%s_%s', section.class, state)
-  if fn.hlexists(hlgroup) == 0 then
-    return section.item
-  end
-  return fmt('%%#%s#%s%%*', hlgroup, section.item)
-end
-
-local function highlight_sections(sections)
   return vim.tbl_map(highlight_section, sections)
 end
 
 -------------------- STATUSLINE ----------------------------
-function M.update_statusline()
-  local sections = cache.previous
-  if common.is_active() or not sections then
-    sections = M.options.sections
-    sections = remove_hidden_sections(sections)
-    sections = load_sections(sections)
-    sections = remove_empty_sections(sections)
-    sections = aggregate_sections(sections)
-    cache.previous, cache.current = cache.current, sections
-  end
-  return table.concat(highlight_sections(sections))
+function M.update_statusline(active)
+  sections = M.options.sections
+  sections = remove_hidden_sections(sections)
+  sections = load_sections(sections)
+  sections = remove_empty_sections(sections)
+  sections = aggregate_sections(sections)
+  return table.concat(highlight_sections(sections, active))
 end
 
 -------------------- BUFFERLINE ----------------------------
@@ -191,8 +186,7 @@ end
 
 local function set_statusline()
   o.showmode = false
-  o.statusline = [[%!luaeval('require("hardline").update_statusline()')]]
-  wo.statusline = o.statusline
+  o.statusline = [[%!luaeval('require("hardline").update_statusline(true)')]]
 end
 
 local function set_bufferline()

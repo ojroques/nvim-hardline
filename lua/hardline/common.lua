@@ -1,5 +1,4 @@
-local cmd, fn = vim.cmd, vim.fn
-local g = vim.g
+local cmd = vim.cmd
 local fmt = string.format
 local M = {}
 
@@ -22,10 +21,6 @@ function M.echo(hlgroup, msg)
   cmd(fmt('echohl %s', hlgroup))
   cmd(fmt('echo "[hardline] %s"', msg))
   cmd('echohl None')
-end
-
-function M.is_active()
-  return g.statusline_winid == fn.win_getid()
 end
 
 function M.set_cache_autocmds(augroup)

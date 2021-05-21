@@ -4,7 +4,7 @@
 
 -------------------- VARIABLES -----------------------------
 local fn, cmd, vim = vim.fn, vim.cmd, vim
-local o, wo = vim.o, vim.wo
+local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
@@ -139,16 +139,24 @@ end
 
 -------------------- STATUSLINE ----------------------------
 function M.update_statusline()
-  local sections = cache.previous
+  local sections = cache[g.statusline_winid]
   if common.is_active() or not sections then
     sections = M.options.sections
     sections = remove_hidden_sections(sections)
     sections = load_sections(sections)
     sections = remove_empty_sections(sections)
     sections = aggregate_sections(sections)
-    cache.previous, cache.current = cache.current, sections
+    cache[g.statusline_winid] = sections
   end
   return table.concat(highlight_sections(sections))
+end
+
+function M.clear_cache()
+  for winid, _ in pairs(cache) do
+    if fn.win_id2win(winid) == 0 then
+      cache[winid] = nil
+    end
+  end
 end
 
 -------------------- BUFFERLINE ----------------------------

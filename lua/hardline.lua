@@ -9,7 +9,6 @@ local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
 local M = {}
-local cache = {}
 
 -------------------- OPTIONS -------------------------------
 M.options = {
@@ -33,6 +32,17 @@ M.options = {
     {class = 'mode', item = require('hardline.parts.line').get_item},
   },
 }
+
+-------------------- SECTION CACHE -------------------------
+local cache = {}
+
+local function refresh_cache()
+  for winid, _ in pairs(cache) do
+    if fn.win_id2win(winid) == 0 then
+      cache[winid] = nil
+    end
+  end
+end
 
 -------------------- SECTION MANAGEMENT --------------------
 local function aggregate_sections(sections)
@@ -147,16 +157,9 @@ function M.update_statusline()
     sections = remove_empty_sections(sections)
     sections = aggregate_sections(sections)
     cache[g.statusline_winid] = sections
+    refresh_cache()
   end
   return table.concat(highlight_sections(sections))
-end
-
-function M.clear_cache()
-  for winid, _ in pairs(cache) do
-    if fn.win_id2win(winid) == 0 then
-      cache[winid] = nil
-    end
-  end
 end
 
 -------------------- BUFFERLINE ----------------------------

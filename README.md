@@ -11,15 +11,14 @@ plugin though._
 ![screenshot](./screenshot.png)
 
 ## Installation
-
-#### With Packer:
+With [packer.nvim](https://github.com/wbthomason/packer.nvim):
 ```lua
 use {'ojroques/nvim-hardline'}
 ```
 
-#### With Plug
-```vim
-Plug 'ojroques/nvim-hardline'
+With [paq-nvim](https://github.com/savq/paq-nvim):
+```lua
+paq {'ojroques/nvim-hardline'}
 ```
 
 ## Usage

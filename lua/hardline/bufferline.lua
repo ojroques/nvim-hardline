@@ -2,7 +2,9 @@ local fn, vim = vim.fn, vim
 local fmt = string.format
 
 local function is_excluded(bufnr, settings)
-  local excluded = fn.buflisted(bufnr) == 0 or fn.getbufvar(bufnr, '&filetype') == 'qf'
+  local excluded = true
+  excluded = excluded and fn.buflisted(bufnr) == 0
+  excluded = excluded or fn.getbufvar(bufnr, '&filetype') == 'qf'
   if settings.exclude_terminal then
     excluded = excluded or fn.getbufvar(bufnr, '&buftype') == 'terminal'
   end

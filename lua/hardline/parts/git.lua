@@ -3,33 +3,33 @@ local g = vim.g
 local b = vim.b
 local fmt = string.format
 
-local function get_hunks()
-  local summary
-  if g.loaded_gitgutter then
-    summary = fn.GitGutterGetHunkSummary()
-  elseif g.loaded_signify then
-    summary = fn['sy#repo#get_stats']()
-    if (summary[1] == -1) then -- signify returns {-1, -1, -1} in empty buffer
-      return ''
-    end
-  elseif b.gitsigns_status_dict ~= nil then
-    local status_dict = b.gitsigns_status_dict
-    if status_dict.added == nil then
-      return ''
-    end
-    summary = {status_dict.added, status_dict.changed, status_dict.removed}
-  else
-    return ''
-  end
-  return table.concat({
-    fmt('+%d', summary[1]),
-    fmt('~%d', summary[2]),
-    fmt('-%d', summary[3]),
+local function concat_hunks(hunks)
+  return vim.tbl_isempty(hunks) and '' or table.concat({
+    fmt('+%d', hunks[1]),
+    fmt('~%d', hunks[2]),
+    fmt('-%d', hunks[3]),
   }, ' ')
 end
 
+local function get_hunks()
+  local hunks = {}
+  if g.loaded_gitgutter then
+    hunks = fn.GitGutterGetHunkSummary()
+  elseif g.loaded_signify then
+    hunks = fn['sy#repo#get_stats']()
+    hunks = hunks[1] == -1 and {} or hunks
+  elseif b.gitsigns_status_dict then
+    hunks = {
+      b.gitsigns_status_dict.added,
+      b.gitsigns_status_dict.changed,
+      b.gitsigns_status_dict.removed,
+    }
+  end
+  return concat_hunks(hunks)
+end
+
 local function get_branch()
-  local branch
+  local branch = ''
   if g.loaded_fugitive then
     branch = fn.FugitiveHead()
   elseif g.loaded_gina then
@@ -44,14 +44,12 @@ end
 
 local function get_item()
   local hunks, branch = get_hunks(), get_branch()
-  if branch == '' then
-    if hunks == '+0 ~0 -0' then
-      return ''
-    else
-      return hunks
-    end
+  if hunks == concat_hunks({0, 0, 0}) and branch == '' then
+    hunks = ''
   end
-  branch = not branch and '' or ' ' .. branch
+  if hunks ~= '' and branch ~= '' then
+    branch = ' ' .. branch
+  end
   return table.concat({hunks, branch})
 end
 

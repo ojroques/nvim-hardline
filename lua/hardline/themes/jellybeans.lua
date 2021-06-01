@@ -24,21 +24,21 @@ return {
     inactive = inactive,
     normal = {
       guifg = colors.black.gui,
-      guibg = colors.green.gui,
-      ctermfg = colors.black.cterm,
-      ctermbg = colors.green.cterm,
-    },
-    insert = {
-      guifg = colors.black.gui,
       guibg = colors.blue.gui,
       ctermfg = colors.black.cterm,
       ctermbg = colors.blue.cterm,
     },
+    insert = {
+      guifg = colors.black.gui,
+      guibg = colors.yellow.gui,
+      ctermfg = colors.black.cterm,
+      ctermbg = colors.yellow.cterm,
+    },
     replace = {
       guifg = colors.black.gui,
-      guibg = colors.cyan.gui,
+      guibg = colors.green.gui,
       ctermfg = colors.black.cterm,
-      ctermbg = colors.cyan.cterm,
+      ctermbg = colors.green.cterm,
     },
     visual = {
       guifg = colors.black.gui,
@@ -102,26 +102,26 @@ return {
     separator = inactive,
     current = {
       guifg = colors.black.gui,
-      guibg = colors.green.gui,
-      ctermfg = colors.black.cterm,
-      ctermbg = colors.green.cterm,
-    },
-    current_modified = {
-      guifg = colors.black.gui,
       guibg = colors.blue.gui,
       ctermfg = colors.black.cterm,
       ctermbg = colors.blue.cterm,
     },
-    background = {
-      guifg = colors.green.gui,
-      guibg = colors.black.gui,
-      ctermfg = colors.green.cterm,
-      ctermbg = colors.black.cterm,
+    current_modified = {
+      guifg = colors.black.gui,
+      guibg = colors.yellow.gui,
+      ctermfg = colors.black.cterm,
+      ctermbg = colors.yellow.cterm,
     },
-    background_modified = {
+    background = {
       guifg = colors.blue.gui,
       guibg = colors.black.gui,
       ctermfg = colors.blue.cterm,
+      ctermbg = colors.black.cterm,
+    },
+    background_modified = {
+      guifg = colors.yellow.gui,
+      guibg = colors.black.gui,
+      ctermfg = colors.yellow.cterm,
       ctermbg = colors.black.cterm,
     },
   },

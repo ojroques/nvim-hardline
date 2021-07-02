@@ -21,17 +21,17 @@ M.options = {
   theme = 'default',
 	-- custom_theme table
 	custom_theme = {
-		black = {gui = "#32302f", cterm = "236", cterm16 = "0"},
-  	blue = { gui = "#83a598", cterm = "109", cterm16 = "12"},
-  	cyan = {gui = "#8ec07c", cterm = "108", cterm16 = "14"},
-  	green = {gui = "#b8bb26", cterm = "142", cterm16 = "10"},
-  	grey_comment = {gui = "#928374", cterm = "244", cterm16 = "8"},
-  	grey_cursor = {gui = "#665c54", cterm = "241", cterm16 = "8"},
-  	grey_menu = {gui = "#7c6f64", cterm = "243", cterm16 = "8"},
-  	purple = {gui = "#d3869b", cterm = "175", cterm16 = "13"},
-  	red = {gui = "#fb4934", cterm = "167", cterm16 = "9"},
-  	white = {gui = "#f2e5bc", cterm = "228", cterm16 = "15"},
-  	yellow = {gui = "#fabd2f", cterm = "214", cterm16 = "11"},
+		black = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	blue = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	cyan = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	green = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	grey_comment = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	grey_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	grey_menu = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	purple = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	red = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	white = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  	yellow = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
 	},
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
@@ -202,12 +202,11 @@ local function set_theme()
 end
 
 local function set_custom_theme()
-	if M.options.theme ~= nil then
+	if type(M.options.custom_theme) ~= 'table' then
 		return
-	elseif type(M.options.custom_theme) ~= 'table' then
-		return
+	elseif M.options.theme == 'none' then
+		return custom_colors.set(M.options.custom_theme)
 	end
-	return custom_colors.set(M.options.custom_theme)
 end
 
 local function set_hlgroups()

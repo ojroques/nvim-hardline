@@ -219,14 +219,17 @@ local function set_theme()
 			if type(M.options.custom_theme) == 'table' then
 				local custom_theme = custom_colors.set(M.options.custom_theme)
 				M.options.theme = custom_theme
+			else
+				local default_theme = 'hardline.themes.default'
+				M.options.theme = require(default_theme)
 			end
-			local default_theme = 'hardline.themes.default'
-			M.options.theme = require(default_theme)
+		else
+			local theme = fmt('hardline.themes.%s', M.options.theme)
+			M.options.theme = require(theme)
 		end
-		local theme = fmt('hardline.themes.%s', M.options.theme)
-		M.options.theme = require(theme)
+	else
+		return
 	end
-  return
 end
 
 local function set_hlgroups()

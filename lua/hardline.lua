@@ -193,7 +193,8 @@ function M.update_bufferline()
 end
 
 -------------------- SETUP -----------------------------
-local function set_theme()
+-- TODO remove if it other function below works
+--[[ local function set_theme()
   if type(M.options.theme) ~= 'string' then
     return
 	elseif M.options.theme ~= 'none' then
@@ -204,11 +205,28 @@ end
 
 local function set_custom_theme()
 	if type(M.options.custom_theme) ~= 'table' then
-		return
+		local default_theme = 'hardline.themes.default'
+		M.options.theme = require(default_theme)
 	elseif M.options.theme == 'none' then
 		local custom_theme = custom_colors.set(M.options.custom_theme)
 		M.options.theme = custom_theme
 	end
+end ]]
+
+local function set_theme()
+	if type(M.options.theme) == 'string' then
+		if M.options.theme == 'none' then
+			if type(M.options.custom_theme) == 'table' then
+				local custom_theme = custom_colors.set(M.options.custom_theme)
+				M.options.theme = custom_theme
+			end
+			local default_theme = 'hardline.themes.default'
+			M.options.theme = require(default_theme)
+		end
+		local theme = fmt('hardline.themes.%s', M.options.theme)
+		M.options.theme = require(theme)
+	end
+  return
 end
 
 local function set_hlgroups()
@@ -239,7 +257,7 @@ end
 function M.setup(user_options)
   M.options = vim.tbl_extend('force', M.options, user_options)
   set_theme()
-	set_custom_theme()
+	-- set_custom_theme() TODO remove if alternate functions works
   set_hlgroups()
   set_statusline()
   if M.options.bufferline then

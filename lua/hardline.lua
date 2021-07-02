@@ -8,6 +8,7 @@ local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
+local custom_colors = require('theme.custom_colors')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
@@ -18,6 +19,20 @@ M.options = {
       show_index = false,
   },
   theme = 'default',
+	-- custom_theme table
+	custom_theme = {
+		black = {gui = "#32302f", cterm = "236", cterm16 = "0"},
+  	blue = { gui = "#83a598", cterm = "109", cterm16 = "12"},
+  	cyan = {gui = "#8ec07c", cterm = "108", cterm16 = "14"},
+  	green = {gui = "#b8bb26", cterm = "142", cterm16 = "10"},
+  	grey_comment = {gui = "#928374", cterm = "244", cterm16 = "8"},
+  	grey_cursor = {gui = "#665c54", cterm = "241", cterm16 = "8"},
+  	grey_menu = {gui = "#7c6f64", cterm = "243", cterm16 = "8"},
+  	purple = {gui = "#d3869b", cterm = "175", cterm16 = "13"},
+  	red = {gui = "#fb4934", cterm = "167", cterm16 = "9"},
+  	white = {gui = "#f2e5bc", cterm = "228", cterm16 = "15"},
+  	yellow = {gui = "#fabd2f", cterm = "214", cterm16 = "11"},
+	},
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -186,6 +201,15 @@ local function set_theme()
   M.options.theme = require(theme)
 end
 
+local function set_custom_theme()
+	if M.options.theme ~= nil then
+		return
+	elseif type(M.options.custom_theme) ~= 'table' then
+		return
+	end
+	return custom_colors.set(M.options.custom_theme)
+end
+
 local function set_hlgroups()
   for class, attr in pairs(M.options.theme) do
     for state, args in pairs(attr) do
@@ -214,6 +238,7 @@ end
 function M.setup(user_options)
   M.options = vim.tbl_extend('force', M.options, user_options)
   set_theme()
+	set_custom_theme()
   set_hlgroups()
   set_statusline()
   if M.options.bufferline then

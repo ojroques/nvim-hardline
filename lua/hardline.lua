@@ -206,7 +206,8 @@ local function set_custom_theme()
 	if type(M.options.custom_theme) ~= 'table' then
 		return
 	elseif M.options.theme == 'none' then
-		return custom_colors.set(M.options.custom_theme)
+		local custom_theme = custom_colors.set(M.options.custom_theme)
+		M.options.theme = custom_theme
 	end
 end
 

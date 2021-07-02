@@ -8,7 +8,7 @@ local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
-local custom_colors = require('hardline.theme.custom_colors')
+local custom_colors = require('hardline.themes.custom_colors')
 local M = {}
 
 -------------------- OPTIONS -------------------------------

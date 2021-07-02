@@ -55,9 +55,9 @@ M.set = function(color_table)
 	  },
 	  med = {
 	    active = {
-	      guifg = color_table.warning.gui,
+	      guifg = color_table.alt_text.gui,
 	      guibg = color_table.inactive_cursor.gui,
-	      ctermfg = color_table.warning.cterm,
+	      ctermfg = color_table.alt_text.cterm,
 	      ctermbg = color_table.inactive_cursor.cterm,
 	    },
 	    inactive = inactive,

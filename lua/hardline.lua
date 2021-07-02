@@ -196,9 +196,10 @@ end
 local function set_theme()
   if type(M.options.theme) ~= 'string' then
     return
+	elseif M.options.theme ~= 'none' then
+		local theme = fmt('hardline.themes.%s', M.options.theme)
+		M.options.theme = require(theme)
   end
-  local theme = fmt('hardline.themes.%s', M.options.theme)
-  M.options.theme = require(theme)
 end
 
 local function set_custom_theme()

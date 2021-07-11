@@ -8,6 +8,7 @@ local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
 local bufferline = require('hardline.bufferline')
+local custom_colors = require('hardline.themes.custom_colors')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
@@ -19,6 +20,19 @@ M.options = {
       separator = '|',
   },
   theme = 'default',
+  custom_theme = {
+    text = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    normal = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    insert = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    replace = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    inactive_comment = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    inactive_menu = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    visual = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    command = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    alt_text = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+    warning = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
+  },
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -182,8 +196,12 @@ local function set_theme()
   if type(M.options.theme) ~= 'string' then
     return
   end
-  local theme = fmt('hardline.themes.%s', M.options.theme)
-  M.options.theme = require(theme)
+  if M.options.theme == 'custom' then
+    M.options.theme = custom_colors.set(M.options.custom_theme)
+  else
+    local theme = fmt('hardline.themes.%s', M.options.theme)
+    M.options.theme = require(theme)
+  end
 end
 
 local function set_hlgroups()

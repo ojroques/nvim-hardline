@@ -20,6 +20,7 @@ M.options = {
       separator = '|',
   },
   theme = 'default',
+  theme_extended = false,
   custom_theme = {
     text = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
     normal = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
@@ -124,6 +125,31 @@ end
 
 -------------------- SECTION HIGHLIGHTING ------------------
 local function get_section_state(section)
+  if M.options.theme_extended then
+    local extended_class = {'low', 'med', 'high', 'mode'}
+    local mode = common.modes[fn.mode()] or common.modes['?']
+    for _, eclass in ipairs(extended_class) do
+      if eclass == section.class then
+        if common.is_active() then
+          if eclass == 'mode' then
+            if o.paste and mode.state == 'insert' then return fmt('%s_paste', mode.state) end
+            if vim.bo.modified then return fmt('%s_modified', mode.state) end
+          end
+          return mode.state
+        else --inactive
+          if eclass == 'mode' then -- find inactive and modified
+            for nr = 1, fn.bufnr('$') do
+              if nr ~= fn.bufnr('%') and fn.getbufvar(nr, '&modified') == 1 then
+                return 'inactive_ext_modified'
+              end
+            end
+          end
+          return 'inactive_ext'
+        end
+      end
+    end
+  end
+
   if section.class == 'mode' then
     if common.is_active() then
       local mode = common.modes[fn.mode()] or common.modes['?']

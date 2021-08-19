@@ -1,9 +1,9 @@
 local colors = {
   black = {gui = '#2E3440', cterm = '235', cterm16 = '0'},
   blue = { gui = '#5E81AC', cterm = '110', cterm16 = '14'},
-  bluegreen = { gui = '#8FBCBB', cterm = '110', cterm = '16'},
+  bluegreen = { gui = '#8FBCBB', cterm = '115', cterm = '14'},
   cyan = {gui = '#88C0D0', cterm = '67', cterm16 = '12'},
-  green = {gui = '#A3BE8C', cterm = '109', cterm16 = '4'},
+  green = {gui = '#A3BE8C', cterm = '108', cterm16 = '4'},
   grey_comment = {gui = "#616E88", cterm = "59", cterm16 = "8"},
   grey_cursor = {gui = "#3B4252", cterm = "59", cterm16 = "8"},
   grey_menu = {gui = "#4C566A", cterm = "59", cterm16 = "8"},

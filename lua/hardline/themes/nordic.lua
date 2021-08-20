@@ -103,9 +103,9 @@ return {
     separator = inactive,
     current = {
       guifg = colors.black.gui,
-      guibg = colors.green.gui,
+      guibg = colors.cyan.gui,
       ctermfg = colors.black.cterm,
-      ctermbg = colors.green.cterm,
+      ctermbg = colors.cyan.cterm,
     },
     current_modified = {
       guifg = colors.black.gui,
@@ -114,15 +114,15 @@ return {
       ctermbg = colors.cyan.cterm,
     },
     background = {
-      guifg = colors.green.gui,
+      guifg = colors.cyan.gui,
       guibg = colors.black.gui,
-      ctermfg = colors.green.cterm,
+      ctermfg = colors.cyan.cterm,
       ctermbg = colors.black.cterm,
     },
     background_modified = {
-      guifg = colors.blue.gui,
+      guifg = colors.cyan.gui,
       guibg = colors.black.gui,
-      ctermfg = colors.blue.cterm,
+      ctermfg = colors.cyan.cterm,
       ctermbg = colors.black.cterm,
     },
   },

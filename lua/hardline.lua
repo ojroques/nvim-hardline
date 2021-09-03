@@ -35,11 +35,11 @@ M.options = {
   },
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
-    {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
-    '%<',
+    {class = 'high', item = require('hardline.parts.git').get_item, hide = 100},
     {class = 'med', item = require('hardline.parts.filename').get_item},
+    '%<',
     {class = 'med', item = '%='},
-    {class = 'low', item = require('hardline.parts.wordcount').get_item, hide = 80},
+    {class = 'low', item = require('hardline.parts.wordcount').get_item, hide = 100},
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
@@ -230,7 +230,9 @@ local function set_bufferline()
 end
 
 function M.setup(user_options)
-  M.options = vim.tbl_extend('force', M.options, user_options)
+  if user_options then
+    M.options = vim.tbl_extend('force', M.options, user_options)
+  end
   set_theme()
   set_hlgroups()
   set_statusline()

@@ -83,6 +83,7 @@ that list is a table with the following attributes:
 | `line` | Line and column positions |
 | `lsp` | Diagnostics from Neovim LSP client |
 | `mode` | Current mode |
+| `treesitter-context` | Current treesitter node (requires [nvim-gps](https://github.com/SmiteshP/nvim-gps)) |
 | `whitespace` | Trailing whitespaces, mixed indent and Git conflict markers warnings |
 | `wordcount` | Current word count (enabled only for [some filetypes](https://github.com/ojroques/nvim-hardline/blob/5fc738bb7991f7d7890be14e7a74a50e21f0bd81/lua/hardline/parts/wordcount.lua#L8-L19)) |
 

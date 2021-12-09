@@ -19,6 +19,9 @@ local function search(prefix, pattern)
 end
 
 local function check_trailing()
+  if vim.tbl_contains({'markdown'}, bo.filetype) then
+    return ''
+  end
   return search('trailing', [[\s$]])
 end
 

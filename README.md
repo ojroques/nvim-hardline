@@ -4,9 +4,8 @@ A statusline / bufferline for Neovim written in Lua. It is inspired by
 [vim-airline](https://github.com/vim-airline/vim-airline) but aims to
 be as light and simple as possible.
 
-_**Note**: this plugin is mainly for my own use. I won't add new
-features/parts/themes if I don't need them. Feel free to submit PRs or fork the
-plugin though._
+_**Note**: I won't add new features/parts/themes if I don't need them. Feel free
+to submit PRs or fork the plugin though._
 
 ![screenshot](./screenshot.png)
 

@@ -7,7 +7,7 @@ local function get_diagnostic(prefix, severity)
     count = lsp.diagnostic.get_count(0, severity)
   else
     local severities = {
-      ['Warning'] = diagnostic.severity.WARNING,
+      ['Warning'] = diagnostic.severity.WARN,
       ['Error'] = diagnostic.severity.ERROR,
     }
     count = #diagnostic.get(0, {severity=severities[severity]})

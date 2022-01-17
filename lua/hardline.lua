@@ -53,7 +53,7 @@ local cache = {}
 
 local function refresh_cache()
   for winid, _ in pairs(cache) do
-    if fn.win_id2win(winid) == 0 then
+    if fn.win_id2tabwin(winid) == {0, 0} then
       cache[winid] = nil
     end
   end

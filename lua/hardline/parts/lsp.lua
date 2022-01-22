@@ -26,7 +26,21 @@ local function get_warning()
   return get_diagnostic('W', 'Warning')
 end
 
+local function get_lsp_clients()
+  local clients = vim.lsp.buf_get_clients()
+  if next(clients) == nil then
+    return "none"
+  end
+
+  local c = {}
+  for _, client in ipairs(clients) do
+    table.insert(c, client.name)
+  end
+  return table.concat(c, "|")
+end
+
 return {
   get_error = get_error,
   get_warning = get_warning,
+  get_lsp_clients = get_lsp_clients,
 }

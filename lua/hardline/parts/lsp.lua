@@ -33,7 +33,7 @@ local function get_lsp_clients()
   end
 
   local c = {}
-  for _, client in ipairs(clients) do
+  for _, client in pairs(clients) do
     table.insert(c, client.name)
   end
   return table.concat(c, "|")

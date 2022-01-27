@@ -24,10 +24,6 @@ function M.echo(hlgroup, msg)
   cmd('echohl None')
 end
 
-function M.is_active()
-  return g.statusline_winid == fn.win_getid()
-end
-
 function M.set_cache_autocmds(augroup)
   cmd(fmt('augroup %s', augroup))
   cmd('autocmd!')

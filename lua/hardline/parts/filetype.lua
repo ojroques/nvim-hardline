@@ -1,7 +1,5 @@
-local bo = vim.bo
-
 local function get_item()
-  return bo.filetype
+  return vim.bo.filetype
 end
 
 return {

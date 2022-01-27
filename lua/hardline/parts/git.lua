@@ -1,6 +1,3 @@
-local fn = vim.fn
-local g = vim.g
-local b = vim.b
 local fmt = string.format
 
 local function concat_hunks(hunks)
@@ -13,16 +10,16 @@ end
 
 local function get_hunks()
   local hunks = {}
-  if g.loaded_gitgutter then
-    hunks = fn.GitGutterGetHunkSummary()
-  elseif g.loaded_signify then
-    hunks = fn['sy#repo#get_stats']()
+  if vim.g.loaded_gitgutter then
+    hunks = vim.fn.GitGutterGetHunkSummary()
+  elseif vim.g.loaded_signify then
+    hunks = vim.fn['sy#repo#get_stats']()
     hunks = hunks[1] == -1 and {} or hunks
-  elseif b.gitsigns_status_dict then
+  elseif vim.b.gitsigns_status_dict then
     hunks = {
-      b.gitsigns_status_dict.added,
-      b.gitsigns_status_dict.changed,
-      b.gitsigns_status_dict.removed,
+      vim.b.gitsigns_status_dict.added,
+      vim.b.gitsigns_status_dict.changed,
+      vim.b.gitsigns_status_dict.removed,
     }
   end
   return concat_hunks(hunks)
@@ -30,14 +27,14 @@ end
 
 local function get_branch()
   local branch = ''
-  if g.loaded_fugitive then
-    branch = fn.FugitiveHead()
-  elseif g.loaded_gina then
-    branch = fn['gina#component#repo#branch']()
-  elseif g.loaded_gitbranch then
-    branch = fn['gitbranch#name']()
-  elseif b.gitsigns_head ~= nil then
-    branch = b.gitsigns_head
+  if vim.g.loaded_fugitive then
+    branch = vim.fn.FugitiveHead()
+  elseif vim.g.loaded_gina then
+    branch = vim.fn['gina#component#repo#branch']()
+  elseif vim.g.loaded_gitbranch then
+    branch = vim.fn['gitbranch#name']()
+  elseif vim.b.gitsigns_head ~= nil then
+    branch = vim.b.gitsigns_head
   end
   return branch ~= '' and fmt('(%s)', branch) or ''
 end

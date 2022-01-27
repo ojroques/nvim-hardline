@@ -95,7 +95,7 @@ local function load_sections(sections)
         item = load_section(section.item),
       }
     end
-    common.echo('WarningMsg', 'Invalid section.')
+    common.echo('Invalid section', 'WarningMsg')
     return ''
   end
   return vim.tbl_map(load_section, sections)
@@ -103,7 +103,7 @@ end
 
 local function remove_hidden_sections(sections)
   local filter = function(section)
-    return not section.hide or section.hide <= fn.winwidth(0)
+    return not section.hide or section.hide <= vim.fn.winwidth(0)
   end
   return vim.tbl_filter(filter, sections)
 end

@@ -1,5 +1,3 @@
-local cmd, fn = vim.cmd, vim.fn
-local g = vim.g
 local fmt = string.format
 local M = {}
 
@@ -18,17 +16,17 @@ M.modes = {
   ['t'] = {text = 'TERMINAL', state = 'command'},
 }
 
-function M.echo(hlgroup, msg)
-  cmd(fmt('echohl %s', hlgroup))
-  cmd(fmt('echo "[hardline] %s"', msg))
-  cmd('echohl None')
+function M.echo(msg, hlgroup)
+  vim.api.nvim_echo({{fmt('[hardline] %s', msg), hlgroup}}, false, {})
 end
 
 function M.set_cache_autocmds(augroup)
-  cmd(fmt('augroup %s', augroup))
-  cmd('autocmd!')
-  cmd(fmt('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
-  cmd('augroup END')
+  vim.cmd(fmt([[
+  augroup %s
+    autocmd!
+    autocmd CursorHold,BufWritePost * unlet! b:%s
+  augroup END
+  ]], augroup, augroup))
 end
 
 return M

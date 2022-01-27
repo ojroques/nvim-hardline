@@ -201,7 +201,7 @@ end
 
 local function set_statusline()
   vim.opt.showmode = false
-  vim.opt.statusline = [[%{%luaeval('require("hardline").update_statusline(true)')%}]]
+  vim.opt.statusline = [[%{%luaeval('require("hardline").update_statusline(false)')%}]]
   vim.cmd([[
   augroup hardline
     autocmd!

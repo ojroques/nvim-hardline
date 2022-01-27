@@ -1,22 +1,19 @@
-local fn = vim.fn
-local bo = vim.bo
-
 local function get_name()
-  return fn.expand('%:~:.')
+  return vim.fn.expand('%:~:.')
 end
 
 local function get_readonly()
-  if bo.readonly then
+  if vim.bo.readonly then
     return '[RO]'
   end
   return ''
 end
 
 local function get_modified()
-  if bo.modified then
+  if vim.bo.modified then
     return '[+]'
   end
-  if not bo.modifiable then
+  if not vim.bo.modifiable then
     return '[-]'
   end
   return ''

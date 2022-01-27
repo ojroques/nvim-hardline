@@ -1,7 +1,5 @@
-local fn = vim.fn
-
 local function get_item()
-  return fn.fnamemodify(fn.getcwd(), ':~')
+  return vim.fn.fnamemodify(vim.fn.getcwd(), ':~')
 end
 
 return {

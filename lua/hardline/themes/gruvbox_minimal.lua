@@ -1,12 +1,12 @@
 local colors = {
-  grey_dark = {gui = "#3b3836", cterm = "240", cterm16 = "0"},
-  grey_medium = {gui = "#4f4945", cterm = "245", cterm16 = "0"},
-  grey_inactive = {gui = "#897e70", cterm = "247", cterm16 = "8"},
-  grey_light = {gui = "#beb297", cterm = "250", cterm16 = "8"},
-  black = {gui = "#1d2021", cterm = "234", cterm16 = "0"},
-  white = {gui = "#fbf1c7", cterm = "228", cterm16 = "15"},
-  red = {gui = "#fb4934", cterm = "167", cterm16 = "9"},
-  yellow = {gui = "#fabd2f", cterm = "214", cterm16 = "11"},
+  grey_dark = {gui = '#3b3836', cterm = '240', cterm16 = '0'},
+  grey_medium = {gui = '#4f4945', cterm = '245', cterm16 = '0'},
+  grey_inactive = {gui = '#897e70', cterm = '247', cterm16 = '8'},
+  grey_light = {gui = '#beb297', cterm = '250', cterm16 = '8'},
+  black = {gui = '#1d2021', cterm = '234', cterm16 = '0'},
+  white = {gui = '#fbf1c7', cterm = '228', cterm16 = '15'},
+  red = {gui = '#fb4934', cterm = '167', cterm16 = '9'},
+  yellow = {gui = '#fabd2f', cterm = '214', cterm16 = '11'},
 }
 
 local inactive = {

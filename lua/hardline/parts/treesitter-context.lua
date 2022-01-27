@@ -1,9 +1,9 @@
-local ok, gps = pcall(require, "nvim-gps")
+local ok, gps = pcall(require, 'nvim-gps')
 if not ok then gps = nil end
 
 local function get_context()
   if not gps or not gps.is_available() then
-    return ""
+    return ''
   end
   return gps.get_location()
 end

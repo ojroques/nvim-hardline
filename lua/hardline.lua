@@ -47,6 +47,15 @@ M.options = {
 }
 
 -------------------- SECTION MANAGEMENT --------------------
+-- Merge sections with same 'class' attribute and add spacing. For instance this:
+-- {class = 'low', item = 'first'},
+-- {class = 'med', item = 'second'},
+-- {class = 'med', item = 'third'},
+-- {class = 'high', item = 'fourth'},
+-- will become this:
+-- {class = 'low', item = ' first '},
+-- {class = 'med', item = ' first second '},
+-- {class = 'high', item = ' third '},
 local function aggregate_sections(sections)
   local aggregated, piv = {}, 1
   while piv <= #sections do

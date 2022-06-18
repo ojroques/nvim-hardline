@@ -54,8 +54,8 @@ M.options = {
 -- {class = 'high', item = 'fourth'},
 -- will become this:
 -- {class = 'low', item = ' first '},
--- {class = 'med', item = ' first second '},
--- {class = 'high', item = ' third '},
+-- {class = 'med', item = ' second third '},
+-- {class = 'high', item = ' fourth '},
 local function aggregate_sections(sections)
   local aggregated, piv = {}, 1
   while piv <= #sections do

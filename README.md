@@ -7,7 +7,7 @@ be as light and simple as possible.
 _**Note**: I won't add new features/parts/themes if I don't need them. Feel free
 to submit PRs or fork the plugin though._
 
-![screenshot](./screenshot.png)
+![screenshot](https://user-images.githubusercontent.com/23409060/188603562-aff6f003-69bc-4bd2-b4c5-83007f338d25.png)
 
 ## Installation
 With [packer.nvim](https://github.com/wbthomason/packer.nvim):

@@ -36,7 +36,7 @@ You can pass options to the `setup()` function. Here are all available options
 with their default settings:
 ```lua
 require('hardline').setup {
-  bufferline = false,  -- enable bufferline
+  bufferline = false,  -- disable bufferline
   bufferline_settings = {
     exclude_terminal = false,  -- don't show terminal buffers in bufferline
     show_index = false,        -- show buffer indexes (not the actual buffer numbers) in bufferline

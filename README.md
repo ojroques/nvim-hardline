@@ -20,6 +20,17 @@ With [paq-nvim](https://github.com/savq/paq-nvim):
 paq {'ojroques/nvim-hardline'}
 ```
 
+With [lazy.nvim](https://github.com/folke/lazy.nvim):
+```lua
+-- init.lua:
+{'ojroques/nvim-hardline'},
+
+-- plugins/hardline.lua:
+return {
+'ojroques/nvim-hardline',
+}
+```
+
 ## Usage
 In your *init.lua*:
 ```lua
